@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FitYouFood.Core.Enums
 {
-    internal enum Target
+    public enum Target
     {
         Deltoid,
         UpperBack,

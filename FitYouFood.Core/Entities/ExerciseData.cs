@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FitYouFood.Core.Entities
 {
-    internal class ExerciseData
+    public class ExerciseData
     {
         public int Id { get; set; }
         public int? Load {  get; set; }

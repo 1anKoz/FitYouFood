@@ -1,4 +1,5 @@
 ﻿using FitYouFood.Core.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace FitYouFood.Core.Entities
 {
-    internal class User
+    public class User : IdentityUser
     {
         public double Height { get; set; }
         public double Weight { get; set; }
@@ -17,5 +18,6 @@ namespace FitYouFood.Core.Entities
 
         public ICollection<ExerciseData> ExerciseDatas { get; set; }
         public ICollection<Training> Trainings { get; set; }
+        public ICollection<MealUser> Meals { get; set; }
     }
 }
