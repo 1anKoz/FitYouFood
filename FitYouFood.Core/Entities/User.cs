@@ -1,0 +1,23 @@
+﻿using FitYouFood.Core.Enums;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FitYouFood.Core.Entities
+{
+    public class User : IdentityUser
+    {
+        public double Height { get; set; }
+        public double Weight { get; set; }
+        public Sex Sex { get; set; }
+        public int Age { get; set; }
+        public Lifestyle Lifestyle { get; set; }
+
+        public ICollection<ExerciseData> ExerciseDatas { get; set; }
+        public ICollection<Training> Trainings { get; set; }
+        public ICollection<MealUser> Meals { get; set; }
+    }
+}

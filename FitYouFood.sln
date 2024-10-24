@@ -5,9 +5,9 @@ VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitYouFood.API", "FitYouFood\FitYouFood.API.csproj", "{4D4326FA-7F86-4F08-86CF-7382E618259B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitYouFood.Core", "FitYouFood.Core\FitYouFood.Core.csproj", "{66AD6812-34A2-4F70-8117-A6665F7E1D4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitYouFood.Core", "FitYouFood.Core\FitYouFood.Core.csproj", "{66AD6812-34A2-4F70-8117-A6665F7E1D4C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitYouFood.Infrastructure", "FitYouFood.Infrastructure\FitYouFood.Infrastructure.csproj", "{3A053355-915E-416E-9BF7-22165CAB82CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitYouFood.Infrastructure", "FitYouFood.Infrastructure\FitYouFood.Infrastructure.csproj", "{3A053355-915E-416E-9BF7-22165CAB82CE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
