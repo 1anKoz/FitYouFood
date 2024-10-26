@@ -1,4 +1,6 @@
-﻿using FitYouFood.Core.Entities;
+﻿using FitYouFood.Core;
+using FitYouFood.Core.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -41,6 +43,21 @@ namespace FitYouFood.Infrastructure
                 .HasOne(mu => mu.Meal)
                 .WithMany(mu => mu.Users)
                 .HasForeignKey(mu => mu.MealId);
+
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole
+                {
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole
+                {
+                    Name = "User",
+                    NormalizedName = "USER"
+                },
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
         }
     }
 }
