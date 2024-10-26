@@ -1,4 +1,5 @@
 ﻿using FitYouFood.API.Dtos.Account;
+using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -8,7 +9,7 @@ namespace FitYouFood.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountControler(UserManager<User> userManager) : ControllerBase
+    public class AccountControler(UserManager<User> userManager, ITokenService _tokenService) : ControllerBase
     {
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto registerDto)
@@ -33,7 +34,13 @@ namespace FitYouFood.API.Controllers
                     var roleResult = await userManager.AddToRoleAsync(user, "User");
                     if (roleResult.Succeeded)
                     {
-                        return Ok("Account created");
+                        return Ok(
+                            new NewUserDto
+                            {
+                                UserName = user.UserName,
+                                Email = user.Email,
+                                Token = _tokenService.CreateToken(user)
+                            });
                     }
                     else
                     {

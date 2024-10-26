@@ -1,3 +1,5 @@
+using FitYouFood.API.Services;
+using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
 using FitYouFood.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddDbContext<FitYouFoodDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<User, IdentityRole>(options =>
