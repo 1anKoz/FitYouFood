@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FitYouFood.API.Dtos.Exercise;
+using FitYouFood.API.Dtos.ExerciseData;
 using FitYouFood.Core.Entities;
 
 namespace FitYouFood.API.Helpers
@@ -10,6 +11,9 @@ namespace FitYouFood.API.Helpers
         {
             CreateMap<Exercise, ExerciseDto>();
             CreateMap<ExerciseDto, Exercise>();
+
+            CreateMap<ExerciseData, ExerciseDataDto>();
+            CreateMap<ExerciseDataDto, ExerciseData>();
         }
     }
 }
