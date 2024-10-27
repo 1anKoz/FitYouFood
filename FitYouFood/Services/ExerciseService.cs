@@ -7,12 +7,12 @@ namespace FitYouFood.API.Services
 {
     public class ExerciseService(FitYouFoodDbContext _context) : IExerciseService
     {
-        public async Task<ICollection<Exercise>> Exercises()
+        public async Task<ICollection<Exercise>> GetExercises()
         {
-            return await _context.Exercises.OrderBy(e => e.Id).ToListAsync();
+            return await _context.Exercises.Where(e => !e.IsDeleted).OrderBy(e => e.Id).ToListAsync();
         }
 
-        public async Task<Exercise> Exercise(int id)
+        public async Task<Exercise> GetExercise(int id)
         {
             return await _context.Exercises.Where(e => e.Id == id).FirstOrDefaultAsync();
         }
@@ -30,12 +30,10 @@ namespace FitYouFood.API.Services
             return await SaveAsync();
         }
 
-        //TODO: add isDeleted field in model and add delete method
-
 
         public async Task<bool> ExerciseExistsAsync(int id)
         {
-            return await _context.Exercises.AnyAsync(e => e.Id == id);
+            return await _context.Exercises.Where(e => !e.IsDeleted).AnyAsync(e => e.Id == id);
         }
 
         public async Task<bool> SaveAsync()

@@ -8,17 +8,17 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace FitYouFood.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ExerciseController(IExerciseService _exerciseService, IMapper _mapper) : ControllerBase
     {
-        [HttpGet("Exercise")]
-        public async Task<IActionResult> GetExercise([FromQuery] int exerciseId)
+        [HttpGet("{exerciseId}")]
+        public async Task<IActionResult> GetExercise(int exerciseId)
         {
             if (!await _exerciseService.ExerciseExistsAsync(exerciseId))
                 return NotFound();
 
-            var exercise = _mapper.Map<ExerciseDto>(await _exerciseService.Exercise(exerciseId));
+            var exercise = _mapper.Map<ExerciseDto>(await _exerciseService.GetExercise(exerciseId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -26,10 +26,10 @@ namespace FitYouFood.API.Controllers
             return Ok(exercise);
         }
 
-        [HttpGet("Exercises")]
+        [HttpGet]
         public async Task<IActionResult> GetExercises()
         {
-            var exercises = _mapper.Map<List<ExerciseDto>>(await _exerciseService.Exercises());
+            var exercises = _mapper.Map<List<ExerciseDto>>(await _exerciseService.GetExercises());
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -57,7 +57,7 @@ namespace FitYouFood.API.Controllers
             return Ok("Succesfully created");
         }
 
-        [HttpPut("EditExercise")]
+        [HttpPut("{exerciseId}")]
         public async Task<IActionResult> PutExercise (int exerciseId, [FromBody] ExerciseDto exerciseDto)
         {
             if(exerciseDto == null || exerciseId != exerciseDto.Id)
@@ -76,6 +76,28 @@ namespace FitYouFood.API.Controllers
                 ModelState.AddModelError("", "Something went wrong while updating exercise");
                 return StatusCode(500, ModelState);
             }
+            return NoContent();
+        }
+
+        [HttpDelete("{exerciseId}")]
+        public async Task<IActionResult> DeleteExercise (int exerciseId)
+        {
+            if (!await _exerciseService.ExerciseExistsAsync(exerciseId))
+                return NotFound();
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var exercise = await _exerciseService.GetExercise(exerciseId);
+
+            exercise.IsDeleted = true;
+
+            if (!await _exerciseService.UpdateExercise(exercise))
+            {
+                ModelState.AddModelError("", "Something went wrong while updating exercise");
+                return StatusCode(500, ModelState);
+            }
+
             return NoContent();
         }
     }

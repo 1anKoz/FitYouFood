@@ -17,5 +17,6 @@ namespace FitYouFood.Core.Entities
         //TODO: change rating to double (it is the final rating of the exercise)
         public int Rating { get; set; }
         public bool IsOfficial { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

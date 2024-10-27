@@ -14,5 +14,6 @@ namespace FitYouFood.Core.Entities
         public int Fat { get; set; }
         public int Carbs { get; set; }
         public bool IsOfficial { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }
