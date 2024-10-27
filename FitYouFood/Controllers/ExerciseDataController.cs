@@ -4,6 +4,7 @@ using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace FitYouFood.API.Controllers
 {
@@ -22,7 +23,7 @@ namespace FitYouFood.API.Controllers
             return Ok(exercises);
         }
 
-        [HttpGet("{exerciseId}")]
+        [HttpGet("{exerciseDataId}")]
         public async Task<IActionResult> GetExerciseData(int exerciseDataId)
         {
             if (!await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
@@ -47,10 +48,6 @@ namespace FitYouFood.API.Controllers
 
             var exerciseMap = _mapper.Map<ExerciseData>(exerciseDataDto);
 
-            exerciseMap.HowMuchMoreRepsAbleToDo = null;
-            exerciseMap.Difficulty = null;
-            exerciseMap.WhenExercised = null;
-
             if(!await _exerciseDataService.CreateExerciseData(exerciseMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
@@ -70,11 +67,13 @@ namespace FitYouFood.API.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var exerciseMap = _mapper.Map<ExerciseData>(exerciseDataDto);
+            var exercise = await _exerciseDataService.GetExerciseData(exerciseDataId);
+            exercise.Difficulty = exerciseDataDto.Difficulty;
+            exercise.HowMuchMoreRepsAbleToDo = exerciseDataDto.HowMuchMoreRepsAbleToDo;
+            exercise.WhenExercised = DateTime.Now;
 
-            exerciseMap.WhenExercised = DateTime.Now;
 
-            if(!await _exerciseDataService.UpdateExerciseData(exerciseMap))
+            if(!await _exerciseDataService.UpdateExerciseData(exercise))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);

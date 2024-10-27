@@ -14,6 +14,10 @@ namespace FitYouFood.API.Helpers
 
             CreateMap<ExerciseData, ExerciseDataDto>();
             CreateMap<ExerciseDataDto, ExerciseData>();
+            CreateMap<ExerciseData, ExerciseDataCreateDto>();
+            CreateMap<ExerciseDataCreateDto, ExerciseData>();
+            CreateMap<ExerciseData, ExerciseDataUpdateDto>();
+            CreateMap<ExerciseDataUpdateDto, ExerciseData>();
         }
     }
 }
