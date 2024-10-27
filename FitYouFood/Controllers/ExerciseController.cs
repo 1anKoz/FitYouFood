@@ -2,9 +2,7 @@
 using FitYouFood.API.Dtos.Exercise;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace FitYouFood.API.Controllers
 {

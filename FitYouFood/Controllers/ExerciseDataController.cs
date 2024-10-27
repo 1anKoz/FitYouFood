@@ -22,10 +22,10 @@ namespace FitYouFood.API.Controllers
             return Ok(exercises);
         }
 
-        [HttpGet("exerciseId")]
-        public async Task<IActionResult> GetExerciseData(int exerciseDataId, string userId)
+        [HttpGet("{exerciseId}")]
+        public async Task<IActionResult> GetExerciseData(int exerciseDataId)
         {
-            if (!await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId, userId))
+            if (!await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
                 return NotFound();
 
             var exercise = _mapper.Map<ExerciseDataDto>(await _exerciseDataService.GetExerciseData(exerciseDataId));
@@ -37,7 +37,7 @@ namespace FitYouFood.API.Controllers
         }
 
         [HttpPost("CreateExercisedata")]
-        public async Task<IActionResult> PostExerciseData([FromBody] ExerciseDataDto exerciseDataDto)
+        public async Task<IActionResult> PostExerciseData([FromBody] ExerciseDataCreateDto exerciseDataDto)
         {
             if(exerciseDataDto == null)
                 return BadRequest(ModelState);
@@ -47,6 +47,10 @@ namespace FitYouFood.API.Controllers
 
             var exerciseMap = _mapper.Map<ExerciseData>(exerciseDataDto);
 
+            exerciseMap.HowMuchMoreRepsAbleToDo = null;
+            exerciseMap.Difficulty = null;
+            exerciseMap.WhenExercised = null;
+
             if(!await _exerciseDataService.CreateExerciseData(exerciseMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
@@ -54,6 +58,50 @@ namespace FitYouFood.API.Controllers
             }
 
             return Ok("Succesfully created");
+        }
+
+        [HttpPut("{exerciseDataId}")]
+        public async Task<IActionResult> PutExerciseData(int exerciseDataId, [FromBody] ExerciseDataUpdateDto exerciseDataDto)
+        {
+            if (exerciseDataDto == null || exerciseDataId != exerciseDataDto.Id)
+                return BadRequest(ModelState);
+            if (!await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
+                return NotFound();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var exerciseMap = _mapper.Map<ExerciseData>(exerciseDataDto);
+
+            exerciseMap.WhenExercised = DateTime.Now;
+
+            if(!await _exerciseDataService.UpdateExerciseData(exerciseMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+        }
+
+        [HttpDelete("{exerciseDataId}")]
+        public async Task<IActionResult> DeleteExercisedata(int exerciseDataId)
+        {
+            if(!await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
+                return NotFound(ModelState);
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var exercise = await _exerciseDataService.GetExerciseData(exerciseDataId);
+
+            exercise.IsDeleted = true;
+
+            if (!await _exerciseDataService.UpdateExerciseData(exercise))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace FitYouFood.API.Services
 
         public async Task<ICollection<ExerciseData>> GetUserExerciseDatas(string userId)
         {
-            return await _context.ExerciseDatas.Where(ed => ed.UserId == userId).OrderBy(ed => ed.Id).ToListAsync();
+            return await _context.ExerciseDatas.Where(ed => ed.UserId == userId && !ed.IsDeleted).OrderBy(ed => ed.Id).ToListAsync();
         }
 
 
@@ -31,9 +31,9 @@ namespace FitYouFood.API.Services
         }
 
 
-        public async Task<bool> ExerciseDataExistsAsync(int exerciseDataId, string userId)
+        public async Task<bool> ExerciseDataExistsAsync(int exerciseDataId)
         {
-            return await _context.ExerciseDatas.AnyAsync(ed => ed.Id == exerciseDataId && ed.UserId == userId);
+            return await _context.ExerciseDatas.Where(ed => !ed.IsDeleted).AnyAsync(ed => ed.Id == exerciseDataId);
         }
 
         public async Task<bool> SaveAsync()

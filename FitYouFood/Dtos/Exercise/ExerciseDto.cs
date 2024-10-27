@@ -11,6 +11,6 @@ namespace FitYouFood.API.Dtos.Exercise
         public string VisualisationUrl { get; set; }
         public int Rating { get; set; }
         public bool IsOfficial { get; set; }
-        public bool IsDeleted { get; set; }
+        //public bool IsDeleted { get; set; }
     }
 }

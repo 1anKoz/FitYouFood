@@ -11,6 +11,6 @@ namespace FitYouFood.API.Services.Interfaces
         Task<bool> UpdateExerciseData(ExerciseData exerciseData);
 
         Task<bool> SaveAsync();
-        Task<bool> ExerciseDataExistsAsync(int id, string userId);
+        Task<bool> ExerciseDataExistsAsync(int id);
     }
 }
