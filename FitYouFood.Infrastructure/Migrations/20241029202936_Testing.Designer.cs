@@ -4,6 +4,7 @@ using FitYouFood.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitYouFood.Infrastructure.Migrations
 {
     [DbContext(typeof(FitYouFoodDbContext))]
-    partial class FitYouFoodDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241029202936_Testing")]
+    partial class Testing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -341,13 +344,13 @@ namespace FitYouFood.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "6a95d201-dca8-49e3-a4c4-668b6bdbcd28",
+                            Id = "cd44f95b-02f6-410a-bcc5-eb48bbecbc26",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "ca6c9936-3424-42da-ac2f-3d8489abd16e",
+                            Id = "3f478c77-aaae-46a5-98e7-a46ec68f3d99",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -467,8 +470,8 @@ namespace FitYouFood.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FitYouFood.Core.Entities.Training", "Training")
-                        .WithMany("ExerciseDatas")
+                    b.HasOne("FitYouFood.Core.Entities.Training", null)
+                        .WithMany("Exercises")
                         .HasForeignKey("TrainingId");
 
                     b.HasOne("FitYouFood.Core.Entities.User", "User")
@@ -478,8 +481,6 @@ namespace FitYouFood.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Exercise");
-
-                    b.Navigation("Training");
 
                     b.Navigation("User");
                 });
@@ -591,7 +592,7 @@ namespace FitYouFood.Infrastructure.Migrations
 
             modelBuilder.Entity("FitYouFood.Core.Entities.Training", b =>
                 {
-                    b.Navigation("ExerciseDatas");
+                    b.Navigation("Exercises");
                 });
 
             modelBuilder.Entity("FitYouFood.Core.Entities.User", b =>

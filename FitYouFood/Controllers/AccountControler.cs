@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FitYouFood.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class AccountControler(UserManager<User> _userManager, ITokenService _tokenService, SignInManager<User> singInManager) : ControllerBase
     {
