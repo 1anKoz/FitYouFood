@@ -1,7 +1,7 @@
 ﻿
 using FitYouFood.Core.Entities;
 
-namespace FitYouFood.API.Dtos.ExerciseData
+namespace FitYouFood.API.Dtos.ExerciseDataDtos
 {
     public class ExerciseDataDto
     {

@@ -4,7 +4,7 @@ namespace FitYouFood.API.Services.Interfaces
 {
     public interface ITrainingService
     {
-        Task<ICollection<Training>> GetUserTrainings(string userId);
+        Task<ICollection<Training>> GetTrainings(string userId);
         Task<Training> GetTraining(int trainingid);
 
         Task<bool> CreateTraining(Training training);

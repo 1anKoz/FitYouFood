@@ -12,10 +12,9 @@ namespace FitYouFood.API.Services
             return await _context.Trainings.Where(t => t.Id == trainingid).Include(t => t.ExerciseDatas).FirstOrDefaultAsync();
         }
 
-        public async Task<ICollection<Training>> GetUserTrainings(string userId)
+        public async Task<ICollection<Training>> GetTrainings(string userId)
         {
-            throw new NotImplementedException();
-            //return await _context.Trainings.Where(t => t.UserId == userId && !t.IsDeleted).OrderBy(t => t.Id).ToListAsync();
+            return await _context.Trainings.Where(t => t.UserId == userId && !t.IsDeleted).OrderBy(t => t.Id).ToListAsync();
         }
 
 
