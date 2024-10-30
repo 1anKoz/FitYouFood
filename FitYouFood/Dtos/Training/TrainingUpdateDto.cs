@@ -8,6 +8,5 @@ namespace FitYouFood.API.Dtos.Training
         public string Name { get; set; }
         public ICollection<int> Difficulty { get; set; }
         public ICollection<DateTime> WhenTrained { get; set; }
-        public ICollection<ExerciseData> ExerciseDatas { get; set; }
     }
 }

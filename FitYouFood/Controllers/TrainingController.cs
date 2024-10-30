@@ -22,7 +22,7 @@ namespace FitYouFood.API.Controllers
             return Ok(trainings);
         }
 
-        [HttpGet("{trainingId")]
+        [HttpGet("{trainingId}")]
         public async Task<IActionResult> GetTraining(int trainingId)
         {
             if (!await _trainingService.TrainingExistsAsync(trainingId))
@@ -52,6 +52,43 @@ namespace FitYouFood.API.Controllers
             }
 
             return Ok("Successfully created");
+        }
+
+        [HttpPut("{trainingId}")]
+        public async Task<IActionResult> PutTraining(int trainingId, [FromBody]TrainingUpdateDto trainingDto)
+        {
+            if(trainingDto == null || !ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var trainingMap = _mapper.Map<Training>(trainingDto);
+
+            if(!await _trainingService.CreateTraining(trainingMap))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Succesfully updated");
+        }
+
+        [HttpDelete("{trainingId}")]
+        public async Task<IActionResult> DeleteTraining(int trainingId)
+        {
+            if (!await _trainingService.TrainingExistsAsync(trainingId))
+                return NotFound();
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var training = await _trainingService.GetTraining(trainingId);
+            training.IsDeleted = true;
+
+            if(!await _trainingService.UpdateTraining(training))
+            {
+                ModelState.AddModelError("", "Something went wrong while saving");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
         }
     }
 }
