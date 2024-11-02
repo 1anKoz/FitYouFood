@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using FitYouFood.API.Dtos.Account;
 using FitYouFood.API.Dtos.Exercise;
 using FitYouFood.API.Dtos.ExerciseDataDtos;
 using FitYouFood.API.Dtos.Training;
@@ -26,6 +27,9 @@ namespace FitYouFood.API.Helpers
             CreateMap<TrainingCreateDto, Training>();
             CreateMap<Training, TrainingUpdateDto>();
             CreateMap<TrainingUpdateDto, Training>();
+
+            CreateMap<User, UserUpdateDto>();
+            CreateMap<UserUpdateDto, User>();
         }
     }
 }
