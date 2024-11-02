@@ -56,7 +56,7 @@ namespace FitYouFood.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Exercises");
+                    b.ToTable("Exercises", (string)null);
                 });
 
             modelBuilder.Entity("FitYouFood.Core.Entities.ExerciseData", b =>
@@ -106,7 +106,7 @@ namespace FitYouFood.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ExerciseDatas");
+                    b.ToTable("ExerciseDatas", (string)null);
                 });
 
             modelBuilder.Entity("FitYouFood.Core.Entities.Ingredient", b =>
@@ -138,7 +138,7 @@ namespace FitYouFood.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Ingredients");
+                    b.ToTable("Ingredients", (string)null);
                 });
 
             modelBuilder.Entity("FitYouFood.Core.Entities.IngredientAmount", b =>
@@ -156,7 +156,7 @@ namespace FitYouFood.Infrastructure.Migrations
 
                     b.HasIndex("MealId");
 
-                    b.ToTable("IngredientsAmounts");
+                    b.ToTable("IngredientsAmounts", (string)null);
                 });
 
             modelBuilder.Entity("FitYouFood.Core.Entities.Meal", b =>
@@ -180,7 +180,7 @@ namespace FitYouFood.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Meals");
+                    b.ToTable("Meals", (string)null);
                 });
 
             modelBuilder.Entity("FitYouFood.Core.Entities.MealUser", b =>
@@ -195,7 +195,7 @@ namespace FitYouFood.Infrastructure.Migrations
 
                     b.HasIndex("MealId");
 
-                    b.ToTable("MealUser");
+                    b.ToTable("MealUser", (string)null);
                 });
 
             modelBuilder.Entity("FitYouFood.Core.Entities.Training", b =>
@@ -229,7 +229,7 @@ namespace FitYouFood.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Trainings");
+                    b.ToTable("Trainings", (string)null);
                 });
 
             modelBuilder.Entity("FitYouFood.Core.Entities.User", b =>

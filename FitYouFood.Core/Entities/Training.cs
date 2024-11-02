@@ -10,9 +10,9 @@ namespace FitYouFood.Core.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<int> Difficulty { get; set; }
-        public ICollection<DateTime> WhenTrained { get; set; }
-        public ICollection<ExerciseData> ExerciseDatas { get; set; }
+        public IList<int> Difficulty { get; set; }
+        public IList<DateTime> WhenTrained { get; set; }
+        public IList<ExerciseData> ExerciseDatas { get; set; }
         public bool IsDeleted { get; set; }
 
         public string UserId { get; set; }

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using FitYouFood.API.Dtos.ExerciseDataDtos;
 using FitYouFood.API.Dtos.Training;
+using FitYouFood.API.Services;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
 using Microsoft.AspNetCore.Http;
@@ -9,7 +11,7 @@ namespace FitYouFood.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class TrainingController(ITrainingService _trainingService, IMapper _mapper) : ControllerBase
+    public class TrainingController(ITrainingService _trainingService, IExerciseDataService _exerciseDataService, IMapper _mapper) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetUserTrainings(string userId)
@@ -89,6 +91,29 @@ namespace FitYouFood.API.Controllers
             }
 
             return NoContent();
+        }
+
+
+        [HttpPost("{trainingId}/Exercise")]
+        public async Task<IActionResult> PostExercise(int trainingId, int exerciseDataId)
+        {
+            if (!await _trainingService.TrainingExistsAsync(trainingId) && !await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
+                return NotFound();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var exerciseData = await _exerciseDataService.GetExerciseData(exerciseDataId);
+            var training = await _trainingService.GetTraining(trainingId);
+
+
+            exerciseData.TrainingId = trainingId;
+
+            if (!await _exerciseDataService.UpdateExerciseData(exerciseData))
+            {
+                ModelState.AddModelError("", "Something went wrong while adding Exercise");
+                return StatusCode(500, ModelState);
+            }
+            return Ok($"Successfully added exercise to {training.Name}");
         }
     }
 }

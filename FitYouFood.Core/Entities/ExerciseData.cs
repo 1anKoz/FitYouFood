@@ -17,7 +17,6 @@ namespace FitYouFood.Core.Entities
         public DateTime? WhenExercised { get; set; }
         public bool IsDeleted { get; set; }
 
-        public virtual Training Training { get; set; }
         public int? TrainingId { get; set; }
 
         public virtual Exercise Exercise { get; set; }
