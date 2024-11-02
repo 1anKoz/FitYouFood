@@ -103,7 +103,6 @@ namespace FitYouFood.API.Controllers
                 return BadRequest(ModelState);
 
             var exerciseData = await _exerciseDataService.GetExerciseData(exerciseDataId);
-            var training = await _trainingService.GetTraining(trainingId);
 
 
             exerciseData.TrainingId = trainingId;
@@ -113,7 +112,27 @@ namespace FitYouFood.API.Controllers
                 ModelState.AddModelError("", "Something went wrong while adding Exercise");
                 return StatusCode(500, ModelState);
             }
-            return Ok($"Successfully added exercise to {training.Name}");
+            return Ok($"Successfully added exercise to training");
+        }
+
+        [HttpDelete("{trainingId}/Exercise/{exerciseDataId}")]
+        public async Task<IActionResult> DeleteExercise(int trainingId, int exerciseDataId)
+        {
+            if (!await _trainingService.TrainingExistsAsync(trainingId) && !await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
+                return NotFound();
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var exerciseData = await _exerciseDataService.GetExerciseData(exerciseDataId);
+
+            exerciseData.TrainingId = null;
+
+            if (!await _exerciseDataService.UpdateExerciseData(exerciseData))
+            {
+                ModelState.AddModelError("", "Something went wrong while deleting Exercise");
+                return StatusCode(500, ModelState);
+            }
+            return Ok($"Successfully deleted exercise from training");
         }
     }
 }
