@@ -38,10 +38,7 @@ namespace FitYouFood.API.Controllers
         [HttpPost("CreateExercise")]
         public async Task<IActionResult> PostExercise([FromBody] ExerciseDto exerciseDto)
         {
-            if(exerciseDto == null)
-                return BadRequest(ModelState);
-
-            if (!ModelState.IsValid)
+            if(exerciseDto == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var exerciseMap = _mapper.Map<Exercise>(exerciseDto);
@@ -58,14 +55,11 @@ namespace FitYouFood.API.Controllers
         [HttpPut("{exerciseId}")]
         public async Task<IActionResult> PutExercise (int exerciseId, [FromBody] ExerciseDto exerciseDto)
         {
-            if(exerciseDto == null || exerciseId != exerciseDto.Id)
+            if(exerciseDto == null || exerciseId != exerciseDto.Id || !ModelState.IsValid)
                 return BadRequest(ModelState);
             
             if(!await _exerciseService.ExerciseExistsAsync(exerciseId))
                 return NotFound();
-
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             var exerciseMap = _mapper.Map<Exercise>(exerciseDto);
 

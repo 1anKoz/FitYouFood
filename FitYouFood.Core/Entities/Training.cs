@@ -10,8 +10,8 @@ namespace FitYouFood.Core.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public IList<int> Difficulty { get; set; }
-        public IList<DateTime> WhenTrained { get; set; }
+        public int Difficulty { get; set; }
+        public DateTime WhenTrained { get; set; }
         public IList<ExerciseData> ExerciseDatas { get; set; }
         public bool IsDeleted { get; set; }
 

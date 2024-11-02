@@ -40,10 +40,7 @@ namespace FitYouFood.API.Controllers
         [HttpPost("CreateExercisedata")]
         public async Task<IActionResult> PostExerciseData([FromBody] ExerciseDataCreateDto exerciseDataDto)
         {
-            if(exerciseDataDto == null)
-                return BadRequest(ModelState);
-
-            if(!ModelState.IsValid)
+            if(exerciseDataDto == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var exerciseMap = _mapper.Map<ExerciseData>(exerciseDataDto);
@@ -60,12 +57,10 @@ namespace FitYouFood.API.Controllers
         [HttpPut("{exerciseDataId}")]
         public async Task<IActionResult> PutExerciseData(int exerciseDataId, [FromBody] ExerciseDataUpdateDto exerciseDataDto)
         {
-            if (exerciseDataDto == null || exerciseDataId != exerciseDataDto.Id)
+            if (exerciseDataDto == null || exerciseDataId != exerciseDataDto.Id || !ModelState.IsValid)
                 return BadRequest(ModelState);
             if (!await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
                 return NotFound();
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             var exercise = await _exerciseDataService.GetExerciseData(exerciseDataId);
             exercise.Difficulty = exerciseDataDto.Difficulty;
@@ -85,10 +80,8 @@ namespace FitYouFood.API.Controllers
         [HttpDelete("{exerciseDataId}")]
         public async Task<IActionResult> DeleteExercisedata(int exerciseDataId)
         {
-            if(!await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
+            if(!await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId) || !ModelState.IsValid)
                 return NotFound(ModelState);
-            if(!ModelState.IsValid)
-                return BadRequest(ModelState);
 
             var exercise = await _exerciseDataService.GetExerciseData(exerciseDataId);
 

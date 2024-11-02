@@ -41,7 +41,6 @@ namespace FitYouFood.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostTraining([FromBody]TrainingCreateDto trainingDto)
         {
-            //TODO: change all controllers validation to single 'if' if possible
             if(trainingDto == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
 
@@ -61,6 +60,8 @@ namespace FitYouFood.API.Controllers
         {
             if(trainingDto == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
+            if (!await _trainingService.TrainingExistsAsync(trainingId))
+                return NotFound();
 
             var trainingMap = _mapper.Map<Training>(trainingDto);
 
