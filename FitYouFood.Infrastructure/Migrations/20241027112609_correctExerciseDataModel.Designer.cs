@@ -4,6 +4,7 @@ using FitYouFood.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitYouFood.Infrastructure.Migrations
 {
     [DbContext(typeof(FitYouFoodDbContext))]
-    partial class FitYouFoodDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241027112609_correctExerciseDataModel")]
+    partial class correctExerciseDataModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,11 +209,9 @@ namespace FitYouFood.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Difficulty")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<string>("Difficulty")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -220,8 +221,9 @@ namespace FitYouFood.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("WhenTrained")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("WhenTrained")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -339,13 +341,13 @@ namespace FitYouFood.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "5076d909-23a6-42bc-b2b4-c0682861d28f",
+                            Id = "5a1d0f2c-7544-44a4-83c4-fc0f447b155f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "cf14a341-59bf-41fa-b930-28597a2d5971",
+                            Id = "126b1e1d-379c-41dc-a8c0-0b4f32548158",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -466,7 +468,7 @@ namespace FitYouFood.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("FitYouFood.Core.Entities.Training", null)
-                        .WithMany("ExerciseDatas")
+                        .WithMany("Exercises")
                         .HasForeignKey("TrainingId");
 
                     b.HasOne("FitYouFood.Core.Entities.User", "User")
@@ -587,7 +589,7 @@ namespace FitYouFood.Infrastructure.Migrations
 
             modelBuilder.Entity("FitYouFood.Core.Entities.Training", b =>
                 {
-                    b.Navigation("ExerciseDatas");
+                    b.Navigation("Exercises");
                 });
 
             modelBuilder.Entity("FitYouFood.Core.Entities.User", b =>

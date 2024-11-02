@@ -1,4 +1,5 @@
-﻿using FitYouFood.API.Dtos.Account;
+﻿using AutoMapper;
+using FitYouFood.API.Dtos.Account;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
 using Microsoft.AspNetCore.Http;
@@ -8,9 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FitYouFood.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
-    public class AccountControler(UserManager<User> _userManager, ITokenService _tokenService, SignInManager<User> singInManager) : ControllerBase
+    public class AccountControler(UserManager<User> _userManager,
+        IMapper _mapper,
+        ITokenService _tokenService,
+        IUserService _userService,
+        SignInManager<User> singInManager) : ControllerBase
     {
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto loginDto)
@@ -82,6 +87,65 @@ namespace FitYouFood.API.Controllers
             {
                 return StatusCode(500, ex);
             }
+        }
+
+        [HttpPut("{userId}")]
+        public async Task<IActionResult> UpdateUserData(string userId, [FromBody] UserUpdateDto userDto)
+        {
+            if (string.IsNullOrEmpty(userId) || !ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Retrieve the existing user from the database
+            var existingUser = await _userService.GetUserByIdAsync(userId);
+
+            if (existingUser == null)
+                return NotFound("User not found");
+
+            // Map only the updated properties from userDto to existingUser
+            _mapper.Map(userDto, existingUser);
+
+            // Update the user in the database
+            var (updateSucceeded, errors) = await _userService.UpdateUser(existingUser);
+            if (!updateSucceeded)
+            {
+                foreach (var error in errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully updated");
+        }
+
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId) || !ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existingUser = await _userService.GetUserByIdAsync(userId);
+
+            if (existingUser == null)
+                return NotFound("User not found");
+
+            existingUser.Email = $"{existingUser.Id}@email.com";
+            existingUser.NormalizedEmail = $"{existingUser.Id}@email.com".ToUpper();
+            existingUser.UserName = $"{existingUser.Id}";
+            existingUser.NormalizedUserName = $"{existingUser.Id}".ToUpper();
+            existingUser.PasswordHash = $"{existingUser.Id}";
+
+            var (updateSucceeded, errors) = await _userService.UpdateUser(existingUser);
+            if (!updateSucceeded)
+            {
+                foreach (var error in errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully deleted");
         }
     }
 }
