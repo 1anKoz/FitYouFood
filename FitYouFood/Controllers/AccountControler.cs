@@ -118,7 +118,34 @@ namespace FitYouFood.API.Controllers
             return Ok("Successfully updated");
         }
 
-        //[HttpDelete("{userId}")]
-        //public async Task<IActionResult> DeleteUser(string userId)
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> DeleteUser(string userId)
+        {
+            if (string.IsNullOrEmpty(userId) || !ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var existingUser = await _userService.GetUserByIdAsync(userId);
+
+            if (existingUser == null)
+                return NotFound("User not found");
+
+            existingUser.Email = $"{existingUser.Id}@email.com";
+            existingUser.NormalizedEmail = $"{existingUser.Id}@email.com".ToUpper();
+            existingUser.UserName = $"{existingUser.Id}";
+            existingUser.NormalizedUserName = $"{existingUser.Id}".ToUpper();
+            existingUser.PasswordHash = $"{existingUser.Id}";
+
+            var (updateSucceeded, errors) = await _userService.UpdateUser(existingUser);
+            if (!updateSucceeded)
+            {
+                foreach (var error in errors)
+                {
+                    ModelState.AddModelError("", error);
+                }
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok("Successfully deleted");
+        }
     }
 }

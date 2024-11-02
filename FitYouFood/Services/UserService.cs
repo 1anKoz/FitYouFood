@@ -20,12 +20,6 @@ namespace FitYouFood.API.Services
             return (result.Succeeded, result.Errors.Select(e => e.Description).ToArray());
         }
 
-        public async Task<bool> DeleteUser(User user)
-        {
-            var result = await _userManager.DeleteAsync(user);
-            return result.Succeeded;
-        }
-
         public async Task<bool> UserExistsAsync(string id)
         {
             return await _userManager.Users.AnyAsync(u => u.Id == id && !u.Email.IsNullOrEmpty());
