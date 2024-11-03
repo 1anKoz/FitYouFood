@@ -2,6 +2,7 @@
 using FitYouFood.API.Dtos.Account;
 using FitYouFood.API.Dtos.Exercise;
 using FitYouFood.API.Dtos.ExerciseDataDtos;
+using FitYouFood.API.Dtos.Ingredient;
 using FitYouFood.API.Dtos.Training;
 using FitYouFood.Core.Entities;
 
@@ -30,6 +31,9 @@ namespace FitYouFood.API.Helpers
 
             CreateMap<User, UserUpdateDto>();
             CreateMap<UserUpdateDto, User>();
+
+            CreateMap<Ingredient, IngredientDto>();
+            CreateMap<IngredientDto, Ingredient>();
         }
     }
 }
