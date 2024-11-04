@@ -25,6 +25,7 @@ namespace FitYouFood.Infrastructure
         public DbSet<Meal> Meals { get; set; }
         public DbSet<Training> Trainings { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<MealUser> MealUser { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

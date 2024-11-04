@@ -9,5 +9,9 @@ namespace FitYouFood.API.Services.Interfaces
         Task<(bool Succeeded, string[] Errors)> UpdateUser(User user);
 
         Task<bool> UserExistsAsync(string id);
+
+        Task<ICollection<Meal>> GetMeals(string userId);
+        Task<bool> AddMeal(string userId, int mealId);
+        Task<bool> RemoveMeal(string userId, int mealId);
     }
 }

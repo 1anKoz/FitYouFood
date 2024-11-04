@@ -37,16 +37,6 @@ namespace FitYouFood.API.Services
         }
 
 
-        public async Task<bool> MealExistsAsync(int id)
-        {
-            return await _context.Meals.AnyAsync(m => m.Id == id);
-        }
-
-        public async Task<bool> SaveAsync()
-        {
-            var saved = await _context.SaveChangesAsync();
-            return saved > 0 ? true : false;
-        }
 
         public async Task<bool> AddIngredientAmount(IngredientAmount ingredientAmount)
         {
@@ -64,6 +54,19 @@ namespace FitYouFood.API.Services
         {
             _context.Remove(ingredientAmount);
             return SaveAsync();
+        }
+
+
+
+        public async Task<bool> MealExistsAsync(int id)
+        {
+            return await _context.Meals.AnyAsync(m => m.Id == id);
+        }
+
+        public async Task<bool> SaveAsync()
+        {
+            var saved = await _context.SaveChangesAsync();
+            return saved > 0 ? true : false;
         }
     }
 }
