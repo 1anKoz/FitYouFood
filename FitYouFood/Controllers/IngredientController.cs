@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using FitYouFood.API.Dtos.Ingredient;
+using FitYouFood.API.Dtos.IngredientDtos;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
 using Microsoft.AspNetCore.Http;

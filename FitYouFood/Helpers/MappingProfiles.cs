@@ -2,7 +2,9 @@
 using FitYouFood.API.Dtos.Account;
 using FitYouFood.API.Dtos.Exercise;
 using FitYouFood.API.Dtos.ExerciseDataDtos;
-using FitYouFood.API.Dtos.Ingredient;
+using FitYouFood.API.Dtos.IngredientAmountDtos;
+using FitYouFood.API.Dtos.IngredientDtos;
+using FitYouFood.API.Dtos.Meal;
 using FitYouFood.API.Dtos.Training;
 using FitYouFood.Core.Entities;
 
@@ -34,6 +36,18 @@ namespace FitYouFood.API.Helpers
 
             CreateMap<Ingredient, IngredientDto>();
             CreateMap<IngredientDto, Ingredient>();
+
+            CreateMap<IngredientAmount, IngredientAmountDto>();
+            CreateMap<IngredientAmountDto, IngredientAmount>();
+            CreateMap<IngredientAmount, IngredientAmountGetDto>();
+            CreateMap<IngredientAmountGetDto, IngredientAmount>();
+
+            CreateMap<Meal, MealDto>();
+            CreateMap<MealDto, Meal>();
+            CreateMap<Meal, MealCreateDto>();
+            CreateMap<MealCreateDto, Meal>();
+            CreateMap<Meal, MealUpdateDto>();
+            CreateMap<MealUpdateDto, Meal>();
         }
     }
 }

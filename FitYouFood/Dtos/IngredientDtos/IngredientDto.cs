@@ -1,4 +1,4 @@
-﻿namespace FitYouFood.API.Dtos.Ingredient
+﻿namespace FitYouFood.API.Dtos.IngredientDtos
 {
     public class IngredientDto
     {
