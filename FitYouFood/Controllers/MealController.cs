@@ -84,10 +84,10 @@ namespace FitYouFood.API.Controllers
         [HttpPost("{mealId}/Ingredients")]
         public async Task<IActionResult> AddIngredient(int mealId, [FromBody] IngredientAmountDto ingredientAmountDto)
         {
-            if (await _mealService.MealExistsAsync(mealId))
+            if (!await _mealService.MealExistsAsync(mealId))
                 return NotFound("Meal not found");
 
-            if (await _ingredientService.IngredientExistsAsync(ingredientAmountDto.IngredientId))
+            if (!await _ingredientService.IngredientExistsAsync(ingredientAmountDto.IngredientId))
                 return NotFound("Ingredient not found");
 
             var ingredientAmount = _mapper.Map<IngredientAmount>(ingredientAmountDto);
@@ -109,6 +109,19 @@ namespace FitYouFood.API.Controllers
             await _mealService.UpdateIngredientAmount(ingredientAmount);
 
             return Ok("Ingredient was updated successfully");
+        }
+
+        [HttpDelete("{mealId}/Ingredients/{ingredientId}")]
+        public async Task<IActionResult> DeleteIngredient(int mealId, int ingredientId)
+        {
+            if (!await _ingredientAmountService.IngredientAmountExistsAsync(mealId, ingredientId))
+                return NotFound();
+
+            var ingredientAmount = await _ingredientAmountService.GetIngredientAmount(mealId, ingredientId);
+
+            await _mealService.DeleteIngredientAmount(ingredientAmount);
+
+            return Ok("Deleted succesfully");
         }
     }
 }
