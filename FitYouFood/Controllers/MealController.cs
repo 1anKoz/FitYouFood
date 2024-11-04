@@ -11,7 +11,7 @@ namespace FitYouFood.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class MealController(IMealService _mealService, IIngredientService _ingredientService, IMapper _mapper) : ControllerBase
+    public class MealController(IMealService _mealService, IIngredientService _ingredientService, IIngredientAmountService _ingredientAmountService, IMapper _mapper) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetMeals()
@@ -84,12 +84,10 @@ namespace FitYouFood.API.Controllers
         [HttpPost("{mealId}/Ingredients")]
         public async Task<IActionResult> AddIngredient(int mealId, [FromBody] IngredientAmountDto ingredientAmountDto)
         {
-            var meal = await _mealService.GetMeal(mealId);
-            if(meal == null)
+            if (await _mealService.MealExistsAsync(mealId))
                 return NotFound("Meal not found");
 
-            var ingredient = _ingredientService.GetIngredient(ingredientAmountDto.IngredientId);
-            if (ingredient == null)
+            if (await _ingredientService.IngredientExistsAsync(ingredientAmountDto.IngredientId))
                 return NotFound("Ingredient not found");
 
             var ingredientAmount = _mapper.Map<IngredientAmount>(ingredientAmountDto);
@@ -98,5 +96,19 @@ namespace FitYouFood.API.Controllers
             return Ok("Ingredient was added successfully");
         }
 
+        [HttpPut("{mealId}/Ingredients/{ingredientId}")]
+        public async Task<IActionResult> UpdateIngredient(int mealId, int ingredientId, [FromBody]IngredientAmountDto ingredientAmountDto)
+        {
+            if (!await _ingredientAmountService.IngredientAmountExistsAsync(mealId, ingredientId))
+                return NotFound();
+
+            var ingredientAmount = await _ingredientAmountService.GetIngredientAmount(mealId, ingredientId);
+
+            _mapper.Map(ingredientAmountDto, ingredientAmount);
+
+            await _mealService.UpdateIngredientAmount(ingredientAmount);
+
+            return Ok("Ingredient was updated successfully");
+        }
     }
 }

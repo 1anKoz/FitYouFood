@@ -7,7 +7,7 @@ namespace FitYouFood.API.Services
 {
     public class IngredientAmountService(FitYouFoodDbContext _context) : IIngredientAmountService
     {
-        public async Task<IngredientAmount> GetIngredientAmount(int ingredientId, int mealId)
+        public async Task<IngredientAmount> GetIngredientAmount(int mealId, int ingredientId)
         {
             return await _context.IngredientsAmounts.Where(ia => ia.IngredientId == ingredientId && ia.MealId == mealId).FirstOrDefaultAsync();
         }
@@ -30,7 +30,7 @@ namespace FitYouFood.API.Services
         }
 
 
-        public async Task<bool> ExerciseDataExistsAsync(int ingredientId, int mealId)
+        public async Task<bool> IngredientAmountExistsAsync(int mealId, int ingredientId)
         {
             return await _context.IngredientsAmounts.AnyAsync(ia => ia.IngredientId == ingredientId && ia.MealId == mealId);
         }
