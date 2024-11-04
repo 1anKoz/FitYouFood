@@ -35,7 +35,10 @@ namespace FitYouFood.API.Services
                 .ThenInclude(ia => ia.Ingredient)
                 .FirstOrDefaultAsync(u => u.Id == userId);
 
-            return user?.Meals.Select(mu => mu.Meal).ToList();
+            if (user == null)
+                return [];
+
+            return user.Meals.Select(mu => mu.Meal).ToList();
         }
 
         public async Task<bool> AddMeal(string userId, int mealId)

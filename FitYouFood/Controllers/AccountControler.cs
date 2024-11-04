@@ -153,7 +153,7 @@ namespace FitYouFood.API.Controllers
 
 
         [HttpPost("{userId}/AddMeal/{mealId}")]
-        public async Task<IActionResult> AddMealToUser(string userId, int mealId)
+        public async Task<IActionResult> AddUserMeal(string userId, int mealId)
         {
             var result = await _userService.AddMeal(userId, mealId);
             if (!result)
@@ -163,7 +163,7 @@ namespace FitYouFood.API.Controllers
         }
 
         [HttpDelete("{userId}/RemoveMeal/{mealId}")]
-        public async Task<IActionResult> RemoveMealFromUser(string userId, int mealId)
+        public async Task<IActionResult> RemoveUserMeal(string userId, int mealId)
         {
             var result = await _userService.RemoveMeal(userId, mealId);
             if (!result)
@@ -173,8 +173,9 @@ namespace FitYouFood.API.Controllers
         }
 
         [HttpGet("{userId}/Meals")]
-        public async Task<IActionResult> GetMealsForUser(string userId)
+        public async Task<IActionResult> GetUserMeals(string userId)
         {
+
             var meals = _mapper.Map<ICollection<MealDto>>(await _userService.GetMeals(userId));
             if (meals == null || meals.Count == 0)
                 return NotFound("No meals found for the user.");
