@@ -16,6 +16,9 @@ builder.Services.AddScoped<IExerciseService, ExerciseService>();
 builder.Services.AddScoped<IExerciseDataService, ExerciseDataService>();
 builder.Services.AddScoped<ITrainingService, TrainingService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IIngredientService, IngredientService>();
+builder.Services.AddScoped<IIngredientAmountService, IngredientAmountService>();
+builder.Services.AddScoped<IMealService, MealService>();
 builder.Services.AddDbContext<FitYouFoodDbContext>(options => 
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<User, IdentityRole>(options =>

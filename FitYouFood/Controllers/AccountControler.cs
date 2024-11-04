@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using FitYouFood.API.Dtos.Account;
+using FitYouFood.API.Dtos.Meal;
+using FitYouFood.API.Services;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
 using Microsoft.AspNetCore.Http;
@@ -15,6 +17,7 @@ namespace FitYouFood.API.Controllers
         IMapper _mapper,
         ITokenService _tokenService,
         IUserService _userService,
+        IMealService _mealService,
         SignInManager<User> singInManager) : ControllerBase
     {
         [HttpPost("login")]
@@ -146,6 +149,38 @@ namespace FitYouFood.API.Controllers
             }
 
             return Ok("Successfully deleted");
+        }
+
+
+        [HttpPost("{userId}/AddMeal/{mealId}")]
+        public async Task<IActionResult> AddUserMeal(string userId, int mealId)
+        {
+            var result = await _userService.AddMeal(userId, mealId);
+            if (!result)
+                return BadRequest("Could not add meal to user.");
+
+            return Ok("Meal added successfully.");
+        }
+
+        [HttpDelete("{userId}/RemoveMeal/{mealId}")]
+        public async Task<IActionResult> RemoveUserMeal(string userId, int mealId)
+        {
+            var result = await _userService.RemoveMeal(userId, mealId);
+            if (!result)
+                return BadRequest("Could not remove meal from user.");
+
+            return Ok("Meal removed successfully.");
+        }
+
+        [HttpGet("{userId}/Meals")]
+        public async Task<IActionResult> GetUserMeals(string userId)
+        {
+
+            var meals = _mapper.Map<ICollection<MealDto>>(await _userService.GetMeals(userId));
+            if (meals == null || meals.Count == 0)
+                return NotFound("No meals found for the user.");
+
+            return Ok(meals);
         }
     }
 }

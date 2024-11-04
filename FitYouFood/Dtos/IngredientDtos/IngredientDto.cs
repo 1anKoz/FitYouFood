@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FitYouFood.Core.Entities
+﻿namespace FitYouFood.API.Dtos.IngredientDtos
 {
-    public class Ingredient
+    public class IngredientDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -14,6 +8,5 @@ namespace FitYouFood.Core.Entities
         public double Fat { get; set; }
         public double Carbs { get; set; }
         public bool IsOfficial { get; set; }
-        public bool IsDeleted { get; set; }
     }
 }
