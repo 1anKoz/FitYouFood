@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+    fityoufood-app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - "8080:80"
+        networks:
+            - app_network
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ConnectionStrings__DefaultConnection=Server=fityoufood-sqlserver-1,1433;Database=YourDbName;User Id=sa;Password=YourStrongPassword123!;
+        depends_on:
+            - sqlserver
+
+    sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        environment:
+            - ACCEPT_EULA=Y
+            - SA_PASSWORD=YourStrongPassword123!
+        ports:
+            - "1433:1433"
+        networks:
+            - app_network
+
+networks:
+    app_network:
+        driver: bridge

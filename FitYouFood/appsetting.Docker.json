@@ -1,0 +1,18 @@
+﻿{
+  "ConnectionStrings": {
+    "DefaultConnection": "Server=fityoufood-sqlserver-1,1433;Database=YourDbName;User Id=sa;Password=YourStrongPassword123!;"
+  },
+  "AllowedHosts": "*", // Allow all hosts for testing, or specify specific hosts
+  "Jwt": {
+    "Issuer": "https://localhost:8080", // Or the Dockerized URL for testing
+    "Audience": "FitYouFoodApi",
+    "SigningKey": "ackjnw9r8yu20edjvneog3h8cnujvn59fh28dqmzl26323mfgknmgntyj83u29619107456926672801kzmbjkdbgn298742957bh28h2jd0jsdd2u2fj2jf5u2050"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Information",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  }
+}
