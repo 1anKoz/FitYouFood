@@ -11,7 +11,7 @@ services:
             - app_network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
-            - ConnectionStrings__DefaultConnection=Server=fityoufood-sqlserver-1,1433;Database=YourDbName;User Id=sa;Password=YourStrongPassword123!;
+            - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=FitYouFood;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=true;
         depends_on:
             - sqlserver
 
