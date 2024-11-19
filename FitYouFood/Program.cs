@@ -96,6 +96,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
+    dbContext.Database.Migrate(); // Applies pending migrations
+}
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

@@ -11,7 +11,7 @@ services:
             - app_network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
-            - ConnectionStrings__DefaultConnection=Server=host.docker.internal,1433;Database=FitYouFood;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=true;
+            - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=FitYouFood;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=true;
         depends_on:
             - sqlserver
 
@@ -24,6 +24,8 @@ services:
             - "1433:1433"
         networks:
             - app_network
+        volumes:
+            - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
 
 networks:
     app_network:

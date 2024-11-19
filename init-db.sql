@@ -1,0 +1,5 @@
+CREATE DATABASE FitYouFood;
+GO
+
+USE FitYouFood;
+GO
