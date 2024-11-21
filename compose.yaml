@@ -14,7 +14,7 @@ services:
             - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=FitYouFood;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=true;
         depends_on:
             - sqlserver
-        image: fityoufood-fityoufood-app
+        image: 1ankoz/fityoufood-app:latest
         restart: on-failure
 
     sqlserver:
