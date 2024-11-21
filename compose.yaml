@@ -14,6 +14,8 @@ services:
             - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=FitYouFood;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=true;
         depends_on:
             - sqlserver
+        image: fityoufood-fityoufood-app
+        restart: on-failure
 
     sqlserver:
         image: mcr.microsoft.com/mssql/server:2022-latest
@@ -26,6 +28,9 @@ services:
             - app_network
         volumes:
             - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+
+volumes:
+    sql_data:
 
 networks:
     app_network:
