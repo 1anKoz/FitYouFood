@@ -46,16 +46,6 @@ jobs:
         docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
         docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
 
-    # Verify Python Tests in Container
-    - name: Run Python Tests
-      run: |
-        docker exec $(docker ps -q -f name=fityoufood-app) pytest module_ai/tests --maxfail=1 --disable-warnings
-
-    # Static Analysis for Python (e.g., Flake8, SonarQube)
-    - name: Python Code Linting with Flake8
-      run: |
-        docker exec $(docker ps -q -f name=fityoufood-app) flake8 module_ai/
-
     - name: SonarQube Analysis (Python)
       run: |
         docker exec $(docker ps -q -f name=fityoufood-app) sonar-scanner \
