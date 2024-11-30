@@ -41,8 +41,8 @@ jobs:
 
     - name: SonarQube Analysis (.NET)
       run: |
-        # Begin SonarQube analysis
-        sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet tool install --global dotnet-sonarscanner
+        docker exec $(docker ps -q -f name=fityoufood-app) dotnet tool install --global dotnet-sonarscanner
+        docker exec $(docker ps -q -f name=fityoufood-app) bash -c 'export PATH="$PATH:/root/.dotnet/tools" && echo $PATH'
         sudo docker exec $(docker ps -q -f name=fityoufood-app) echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
         sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
           /k:"fityoufood-backend" \
