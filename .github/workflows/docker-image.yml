@@ -29,7 +29,10 @@ jobs:
     
             
     - name: Run .NET Backend Tests
-      run: docker exec $(docker ps -q -f name=fityoufood-app) dotnet test --no-build --verbosity normal
+      run: docker exec $(docker ps -q -f name=fityoufood-app) dotnet test FitYouFood.Tests\FitYouFood.Tests.csproj --no-build --verbosity normal
+
+      
+
 
     # # Install SonarScanner for .NET
     # - name: Install SonarScanner for .NET
