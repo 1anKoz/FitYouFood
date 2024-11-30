@@ -6,7 +6,8 @@ COPY ["FitYouFood/FitYouFood.API.csproj", "FitYouFood/"]
 COPY ["FitYouFood.Core/FitYouFood.Core.csproj", "FitYouFood.Core/"]
 COPY ["FitYouFood.Infrastructure/FitYouFood.Infrastructure.csproj", "FitYouFood.Infrastructure/"]
 
-RUN dotnet tool install --global dotnet-sonarscanner
+RUN dotnet new tool-manifest --force  # Create tool manifest if not already present
+RUN dotnet tool install dotnet-sonarscanner
 
 RUN dotnet restore "FitYouFood/FitYouFood.API.csproj"
 
