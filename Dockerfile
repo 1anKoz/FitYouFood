@@ -18,10 +18,14 @@ COPY . .
 
 WORKDIR "/src/FitYouFood"
 RUN dotnet build "FitYouFood.API.csproj" -c Release -o /app/build
-RUN dotnet publish "FitYouFood.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 WORKDIR "/src/FitYouFood.Tests"
-RUN dotnet test "FitYouFood.Tests.csproj" --no-build --verbosity normal
+RUN dotnet build "FitYouFood.Tests.csproj" -c Debug -o /app/tests
+
+RUN dotnet test "FitYouFood.Tests.csproj" --verbosity normal
+
+WORKDIR "/src/FitYouFood"
+RUN dotnet publish "FitYouFood.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS final
 WORKDIR /app
