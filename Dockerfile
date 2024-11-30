@@ -1,10 +1,8 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Install dotnet-sonarscanner
 RUN dotnet tool install --global dotnet-sonarscanner
 
-# Ensure the tool is in the PATH
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
 COPY ["FitYouFood.sln", "./"]
@@ -22,11 +20,14 @@ WORKDIR "/src/FitYouFood"
 RUN dotnet build "FitYouFood.API.csproj" -c Release -o /app/build
 RUN dotnet publish "FitYouFood.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
+WORKDIR "/src/FitYouFood.Tests"
+RUN dotnet test "FitYouFood.Tests.csproj" --no-build --verbosity normal
+
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS final
 WORKDIR /app
+
 COPY --from=build /app/publish .
 
-ENV PATH="${PATH}:/root/.dotnet/tools"
 RUN dotnet tool install --global dotnet-sonarscanner
 
 EXPOSE 80
