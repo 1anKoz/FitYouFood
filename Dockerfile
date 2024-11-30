@@ -14,6 +14,7 @@ COPY ["FitYouFood.Infrastructure/FitYouFood.Infrastructure.csproj", "FitYouFood.
 COPY ["FitYouFood.Tests/FitYouFood.Tests.csproj", "FitYouFood.Tests/"]
 
 RUN dotnet restore "FitYouFood/FitYouFood.API.csproj"
+RUN dotnet restore "FitYouFood.Tests/FitYouFood.Tests.csproj"
 
 COPY . .
 

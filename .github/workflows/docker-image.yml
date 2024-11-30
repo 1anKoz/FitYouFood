@@ -58,22 +58,23 @@ jobs:
     #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
     #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
 
-    - name: Tag and Push Docker Image
-      run: |
-        docker tag 1ankoz/fityoufood-app:latest ${{ secrets.DOCKER_USERNAME }}/fityoufood-app:latest
-        docker push ${{ secrets.DOCKER_USERNAME }}/fityoufood-app:latest
     
-    - name: Verify Metrics Endpoint
-      run: |
-        curl -f http://localhost:8080/actuator/metrics || echo "Metrics endpoint not available"
-    
-    - name: Verify Logging
-      run: |
-        curl -f http://localhost:8080/logging || echo "Logging endpoint not available"
         
     - name: Run .NET Backend Tests
       run: docker exec $(docker ps -q -f name=fityoufood-app) dotnet test /app/FitYouFood.Tests/FitYouFood.Tests.csproj --no-build --verbosity normal
 
-    # Tear Down Services
+    - name: Verify Metrics Endpoint
+      run: |
+        curl -f http://localhost:8080/actuator/metrics || echo "Metrics endpoint not available"
+    
+    - name: Verify Logging - nie dziala
+      run: |
+        curl -f http://localhost:8080/logging || echo "Logging endpoint not available"
+
+    - name: Tag and Push Docker Image
+      run: |
+        docker tag 1ankoz/fityoufood-app:latest ${{ secrets.DOCKER_USERNAME }}/fityoufood-app:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/fityoufood-app:latest
+
     - name: Stop and Remove Services
       run: docker compose -f compose.yaml down
