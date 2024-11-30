@@ -30,6 +30,19 @@ jobs:
     # Wait for services to be ready
     - name: Wait for Services to Start
       run: sleep 30
+    
+            
+    - name: Run .NET Backend Tests
+      run: |
+       # Ensure the .NET SDK is installed in the container before running tests
+       docker exec $(docker ps -q -f name=fityoufood-app) apt-get update
+       docker exec $(docker ps -q -f name=fityoufood-app) apt-get install -y wget ca-certificates
+       docker exec $(docker ps -q -f name=fityoufood-app) wget https://packages.microsoft.com/config/debian/12/prod.list
+       docker exec $(docker ps -q -f name=fityoufood-app) mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
+       docker exec $(docker ps -q -f name=fityoufood-app) wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+       docker exec $(docker ps -q -f name=fityoufood-app) apt-get update
+       docker exec $(docker ps -q -f name=fityoufood-app) apt-get install -y dotnet-sdk-8.0
+       docker exec $(docker ps -q -f name=fityoufood-app) dotnet test --no-build --verbosity normal
 
     # # Install SonarScanner for .NET
     # - name: Install SonarScanner for .NET
@@ -39,17 +52,17 @@ jobs:
     # - name: Add .NET tools to PATH
     #   run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
-    - name: SonarQube Analysis (.NET)
-      run: |
-        # Begin SonarQube analysis
-        sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet tool install --global dotnet-sonarscanner
-        sudo docker exec $(docker ps -q -f name=fityoufood-app) echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
-        sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
-          /k:"fityoufood-backend" \
-          /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
-          /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
-        docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
-        docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+    # - name: SonarQube Analysis (.NET)
+    #   run: |
+    #     # Begin SonarQube analysis
+    #     sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet tool install --global dotnet-sonarscanner
+    #     sudo docker exec $(docker ps -q -f name=fityoufood-app) echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
+    #     sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
+    #       /k:"fityoufood-backend" \
+    #       /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
+    #       /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+    #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
+    #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
 
 
     # Push Docker Image to Docker Hub
@@ -67,18 +80,7 @@ jobs:
     - name: Verify Logging
       run: |
         curl -f http://localhost:8080/logging || echo "Logging endpoint not available"
-        
-   # - name: Run .NET Backend Tests
-    #  run: |
-     #   # Ensure the .NET SDK is installed in the container before running tests
-      #  docker exec $(docker ps -q -f name=fityoufood-app) apt-get update
-       # docker exec $(docker ps -q -f name=fityoufood-app) apt-get install -y wget ca-certificates
-       # docker exec $(docker ps -q -f name=fityoufood-app) wget https://packages.microsoft.com/config/debian/12/prod.list
-       # docker exec $(docker ps -q -f name=fityoufood-app) mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
-       # docker exec $(docker ps -q -f name=fityoufood-app) wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
-       # docker exec $(docker ps -q -f name=fityoufood-app) apt-get update
-       # docker exec $(docker ps -q -f name=fityoufood-app) apt-get install -y dotnet-sdk-8.0
-       # docker exec $(docker ps -q -f name=fityoufood-app) dotnet test --no-build --verbosity normal
+
 
     # Tear Down Services
     - name: Stop and Remove Services
