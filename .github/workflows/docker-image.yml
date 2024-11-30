@@ -31,6 +31,14 @@ jobs:
     - name: Wait for Services to Start
       run: sleep 30
 
+    # Install SonarScanner for .NET
+    - name: Install SonarScanner for .NET
+      run: dotnet tool install --global dotnet-sonarscanner
+
+    # Add SonarScanner to PATH
+    - name: Add .NET tools to PATH
+      run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
+
     - name: SonarQube Analysis (.NET)
       run: |
         # Begin SonarQube analysis
