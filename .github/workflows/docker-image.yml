@@ -32,7 +32,7 @@ jobs:
     - name: SonarQube Analysis (.NET)
       run: |
         # Begin SonarQube analysis
-        docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
+        sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
           /k:"fityoufood-backend" \
           /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
           /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
