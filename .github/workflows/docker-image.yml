@@ -32,12 +32,12 @@ jobs:
     # Static Code Analysis for .NET (SonarQube)
     - name: SonarQube Analysis (.NET)
       run: |
-        docker exec $(docker ps -q -f name=sonarqube) dotnet-sonarscanner begin \
+        docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
           /k:"fityoufood-backend" \
           /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
           /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
-        docker exec $(docker ps -q -f name=sonarqube) dotnet build
-        docker exec $(docker ps -q -f name=sonarqube) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+        docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
+        docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
 
     # Push Docker Image to Docker Hub
     - name: Tag and Push Docker Image
