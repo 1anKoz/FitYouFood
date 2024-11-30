@@ -16,7 +16,9 @@ services:
       - sqlserver
     image: 1ankoz/fityoufood-app:latest
     restart: on-failure
-
+    command: >
+      /bin/sh -c "dotnet tool install --global dotnet-sonarscanner && dotnet restore FitYouFood/FitYouFood.API.csproj && dotnet build FitYouFood/FitYouFood.API.csproj"
+  
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
