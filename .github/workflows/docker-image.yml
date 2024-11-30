@@ -34,7 +34,7 @@ jobs:
         elapsed=0
         while ! curl -sf ${{ secrets.SONARQUBE_HOST }}/api/system/health | grep -q "GREEN"; do
           echo "Waiting for SonarQube to start... ($elapsed seconds elapsed)"
-          echo "${{ secrets.SONARQUBE_HOST }}/api/system/healt"
+          echo "curl -sf ${{ secrets.SONARQUBE_HOST }}/api/system/health"
           sleep $interval
           elapsed=$((elapsed + interval))
           if [ $elapsed -ge $timeout ]; then
