@@ -1,12 +1,16 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
+# Install dotnet-sonarscanner
+RUN dotnet tool install --global dotnet-sonarscanner
+
+# Ensure the tool is in the PATH
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
 COPY ["FitYouFood.sln", "./"]
 COPY ["FitYouFood/FitYouFood.API.csproj", "FitYouFood/"]
 COPY ["FitYouFood.Core/FitYouFood.Core.csproj", "FitYouFood.Core/"]
 COPY ["FitYouFood.Infrastructure/FitYouFood.Infrastructure.csproj", "FitYouFood.Infrastructure/"]
-
-RUN dotnet tool install --global dotnet-sonarscanner
 
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
