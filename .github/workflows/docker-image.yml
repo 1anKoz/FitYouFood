@@ -32,7 +32,7 @@ jobs:
     # Static Code Analysis for .NET (SonarQube)
     - name: SonarQube Analysis (.NET)
       run: |
-        docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
+        docker exec $(docker ps -q -f name=fityoufood-app) sonarscanner begin \
           /k:"fityoufood-backend" \
           /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
           /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
