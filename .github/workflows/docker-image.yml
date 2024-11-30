@@ -39,15 +39,37 @@ jobs:
     - name: Add .NET tools to PATH
       run: echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
 
+    # # Begin SonarQube Analysis
+    # - name: Begin SonarQube Analysis
+    # env:
+    #   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }} # Add this in GitHub Secrets
+    # run: |
+    #   dotnet-sonarscanner begin \
+    #     /k:"YourProjectKey" \ # Replace with your SonarQube project key
+    #     /d:sonar.host.url="https://your-sonarqube-url.com" \ # Replace with your SonarQube URL
+    #     /d:sonar.login="${SONAR_TOKEN}" \
+    #     /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" # Optional for coverage
+
+    # - name: SonarQube Analysis (.NET)
+    #   run: |
+    #     # Begin SonarQube analysis
+    #     sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
+    #       /k:"fityoufood-backend" \
+    #       /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
+    #       /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+    #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
+    #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+
+    
     - name: SonarQube Analysis (.NET)
       run: |
         # Begin SonarQube analysis
-        sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
+        dotnet-sonarscanner begin \
           /k:"fityoufood-backend" \
           /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
           /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
-        docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
-        docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+        dotnet build
+        dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
 
     # Push Docker Image to Docker Hub
     - name: Tag and Push Docker Image
