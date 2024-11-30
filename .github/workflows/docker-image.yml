@@ -71,17 +71,8 @@ jobs:
       run: |
         curl -f http://localhost:8080/logging || echo "Logging endpoint not available"
         
-   # - name: Run .NET Backend Tests
-    #  run: |
-     #   # Ensure the .NET SDK is installed in the container before running tests
-      #  docker exec $(docker ps -q -f name=fityoufood-app) apt-get update
-       # docker exec $(docker ps -q -f name=fityoufood-app) apt-get install -y wget ca-certificates
-       # docker exec $(docker ps -q -f name=fityoufood-app) wget https://packages.microsoft.com/config/debian/12/prod.list
-       # docker exec $(docker ps -q -f name=fityoufood-app) mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
-       # docker exec $(docker ps -q -f name=fityoufood-app) wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
-       # docker exec $(docker ps -q -f name=fityoufood-app) apt-get update
-       # docker exec $(docker ps -q -f name=fityoufood-app) apt-get install -y dotnet-sdk-8.0
-       # docker exec $(docker ps -q -f name=fityoufood-app) dotnet test --no-build --verbosity normal
+    - name: Run .NET Backend Tests
+      run: docker exec $(docker ps -q -f name=fityoufood-app) dotnet test /app/FitYouFood.Tests/FitYouFood.Tests.csproj --no-build --verbosity normal
 
     # Tear Down Services
     - name: Stop and Remove Services
