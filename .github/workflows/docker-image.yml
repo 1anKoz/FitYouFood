@@ -27,8 +27,6 @@ jobs:
     # - name: Run .NET Backend Tests
     #   run: docker exec $(docker ps -q -f name=fityoufood-app) dotnet test FitYouFood.Tests\FitYouFood.Tests.csproj --no-build --verbosity normal
 
-
-
     # # Install SonarScanner for .NET
     # - name: Install SonarScanner for .NET
     #   run: dotnet tool install --global dotnet-sonarscanner
@@ -49,10 +47,10 @@ jobs:
     #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
     #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
 
-            - name: Tag and Push Docker Image
-              run: |
-                  docker tag 1ankoz/fityoufood-app:latest ${{ secrets.DOCKER_USERNAME }}/fityoufood-app:latest
-                  docker push ${{ secrets.DOCKER_USERNAME }}/fityoufood-app:latest
+    - name: Tag and Push Docker Image
+      run: |
+          docker tag 1ankoz/fityoufood-app:latest ${{ secrets.DOCKER_USERNAME }}/fityoufood-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/fityoufood-app:latest
 
-            - name: Stop and Remove Services
-              run: docker compose -f compose.yml down
+    - name: Stop and Remove Services
+      run: docker compose -f compose.yml down
