@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitYouFood.Core", "FitYouFo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitYouFood.Infrastructure", "FitYouFood.Infrastructure\FitYouFood.Infrastructure.csproj", "{3A053355-915E-416E-9BF7-22165CAB82CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitYouFood.Tests", "FitYouFood.Tests\FitYouFood.Tests.csproj", "{F8E4C102-0B2E-47D9-8216-F4BAB39C9E24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3A053355-915E-416E-9BF7-22165CAB82CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A053355-915E-416E-9BF7-22165CAB82CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A053355-915E-416E-9BF7-22165CAB82CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8E4C102-0B2E-47D9-8216-F4BAB39C9E24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8E4C102-0B2E-47D9-8216-F4BAB39C9E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8E4C102-0B2E-47D9-8216-F4BAB39C9E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8E4C102-0B2E-47D9-8216-F4BAB39C9E24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
