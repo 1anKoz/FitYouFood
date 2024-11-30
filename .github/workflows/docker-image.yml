@@ -29,7 +29,7 @@ jobs:
 
     # Wait for services to be ready
     - name: Wait for Services to Start
-      run: sleep 30
+      run: sleep 16
 
     # # Install SonarScanner for .NET
     # - name: Install SonarScanner for .NET
