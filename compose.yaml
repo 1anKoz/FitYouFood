@@ -1,37 +1,71 @@
 version: "3.8"
 
 services:
-    fityoufood-app:
-        build:
-            context: .
-            dockerfile: Dockerfile
-        ports:
-            - "8080:80"
-        networks:
-            - app_network
-        environment:
-            - ASPNETCORE_ENVIRONMENT=Development
-            - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=FitYouFood;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=true;
-        depends_on:
-            - sqlserver
-        image: 1ankoz/fityoufood-app:latest
-        restart: on-failure
+  fityoufood-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    networks:
+      - app_network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=FitYouFood;User Id=sa;Password=YourStrongPassword123!;TrustServerCertificate=true;
+    depends_on:
+      - sqlserver
+    image: 1ankoz/fityoufood-app:latest
+    restart: on-failure
 
-    sqlserver:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        environment:
-            - ACCEPT_EULA=Y
-            - SA_PASSWORD=YourStrongPassword123!
-        ports:
-            - "1433:1433"
-        networks:
-            - app_network
-        volumes:
-            - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrongPassword123!
+    ports:
+      - "1433:1433"
+    networks:
+      - app_network
+    volumes:
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://sonar-db:5432/sonar
+      - SONARQUBE_JDBC_USERNAME=sonar
+      - SONARQUBE_JDBC_PASSWORD=sonar
+    ports:
+      - "9000:9000"
+    networks:
+      - app_network
+    depends_on:
+      - sonar-db
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+
+  sonar-db:
+    image: postgres:12
+    container_name: sonar-db
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+      - POSTGRES_DB=sonar
+    networks:
+      - app_network
+    volumes:
+      - sonar_db_data:/var/lib/postgresql/data
 
 volumes:
-    sql_data:
+  sql_data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonar_db_data:
 
 networks:
-    app_network:
-        driver: bridge
+  app_network:
+    driver: bridge
