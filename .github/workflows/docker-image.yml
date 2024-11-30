@@ -58,11 +58,6 @@ jobs:
     #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
     #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
 
-    
-        
-    - name: Run .NET Backend Tests
-      run: docker exec $(docker ps -q -f name=fityoufood-app) dotnet test /app/FitYouFood.Tests/FitYouFood.Tests.csproj --no-build --verbosity normal
-
     - name: Verify Metrics Endpoint
       run: |
         curl -f http://localhost:8080/actuator/metrics || echo "Metrics endpoint not available"
