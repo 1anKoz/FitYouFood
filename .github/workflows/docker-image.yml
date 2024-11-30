@@ -29,9 +29,11 @@ jobs:
     - name: Wait for Services to Start
       run: sleep 30
 
-    # Run Tests for .NET Backend
     - name: Run .NET Backend Tests
       run: |
+        # Ensure the .NET SDK is installed in the container before running tests
+        docker exec $(docker ps -q -f name=fityoufood-app) apt-get update
+        docker exec $(docker ps -q -f name=fityoufood-app) apt-get install -y dotnet-sdk-7.0
         docker exec $(docker ps -q -f name=fityoufood-app) dotnet test --no-build --verbosity normal
 
     # Static Code Analysis for .NET (SonarQube)
