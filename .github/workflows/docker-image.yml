@@ -21,7 +21,7 @@ jobs:
     - name: Log in to Docker Hub
       run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-    - name: Build and Start Services
+    - name: Build, start and test services
       run: docker compose -f compose.yaml up --build -d
 
     - name: Wait for Services to Start
@@ -62,10 +62,6 @@ jobs:
       run: |
         curl -f http://localhost:8080/actuator/metrics || echo "Metrics endpoint not available"
     
-    - name: Verify Logging - nie dziala
-      run: |
-        curl -f http://localhost:8080/logging || echo "Logging endpoint not available"
-
     - name: Tag and Push Docker Image
       run: |
         docker tag 1ankoz/fityoufood-app:latest ${{ secrets.DOCKER_USERNAME }}/fityoufood-app:latest
