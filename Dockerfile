@@ -6,6 +6,8 @@ COPY ["FitYouFood/FitYouFood.API.csproj", "FitYouFood/"]
 COPY ["FitYouFood.Core/FitYouFood.Core.csproj", "FitYouFood.Core/"]
 COPY ["FitYouFood.Infrastructure/FitYouFood.Infrastructure.csproj", "FitYouFood.Infrastructure/"]
 
+RUN dotnet tool install --global dotnet-sonarscanner
+
 RUN dotnet restore "FitYouFood/FitYouFood.API.csproj"
 
 COPY . .
