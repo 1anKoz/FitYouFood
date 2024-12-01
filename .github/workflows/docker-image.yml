@@ -24,7 +24,7 @@ jobs:
 
             - name: Wait for Services to Start
               run: |
-                  sleep 70
+                  sleep 50
                   docker logs $(docker ps -q -f name=sonarqube)
 
             - name: SonarQube Analysis (.NET)
