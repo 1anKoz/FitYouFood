@@ -1,3 +1,6 @@
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
+
 using FitYouFood.API.Services;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
@@ -9,6 +12,18 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Serilog
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
+    {
+        AutoRegisterTemplate = true,
+        IndexFormat = "fityoufood-logs-{0:yyyy.MM.dd}"
+    })
+    .CreateLogger();
+
+// Set up Serilog for ASP.NET Core
+builder.Host.UseSerilog();
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ITokenService, TokenService>();
