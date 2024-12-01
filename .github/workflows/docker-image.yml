@@ -16,10 +16,6 @@ jobs:
 
     steps:
 
-    - name: Testowanie super testy jednostkowe komenda kontener
-      run: |
-        docker exec -it $(docker ps -q -f name=fityoufood-app) bash -c "pwd"
-
     - name: Checkout Code
       uses: actions/checkout@v4
 
@@ -28,6 +24,10 @@ jobs:
 
     - name: Build, start and test services
       run: docker compose -f compose.yaml up --build -d
+
+    - name: Testowanie super testy jednostkowe komenda kontener
+      run: |
+        docker exec -it $(docker ps -q -f name=fityoufood-app) bash -c "pwd"
 
     - name: Wait for Services to Start
       run: |
