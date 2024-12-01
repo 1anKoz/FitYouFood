@@ -36,6 +36,8 @@ COPY --from=build /src/FitYouFood.Tests/ ./FitYouFood.Tests/
 
 RUN dotnet tool install --global dotnet-sonarscanner
 
+ENV PATH="${PATH}:/root/.dotnet/tools"
+
 EXPOSE 80
 
 ENTRYPOINT ["dotnet", "FitYouFood.API.dll"]
