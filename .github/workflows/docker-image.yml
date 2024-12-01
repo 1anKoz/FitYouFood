@@ -33,16 +33,18 @@ jobs:
     - name: SonarQube Analysis (.NET)
       run: |
 
-        docker exec -i $(docker ps -q -f name=fityoufood-app) bash -c "export PATH="$PATH:/root/.dotnet/tools""
+        docker exec -i $(docker ps -q -f name=fityoufood-app) bash
 
-        docker exec -i $(docker ps -q -f name=fityoufood-app) bash -c "dotnet-sonarscanner begin \
+        docker exec -i $(docker ps -q -f name=fityoufood-app) export PATH="$PATH:/root/.dotnet/tools"
+
+        docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
           /k:"fityoufood-backend" \
           /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
-          /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"""
+          /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
 
-        docker exec -i $(docker ps -q -f name=fityoufood-app) bash -c "dotnet build ./FitYouFood/FitYouFood.API.csproj" 
+        docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
-        docker exec -i $(docker ps -q -f name=fityoufood-app) bash -c" dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+        docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}
 
 
     - name: Verify Metrics Endpoint
