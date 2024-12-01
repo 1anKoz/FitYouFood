@@ -1,3 +1,4 @@
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
@@ -35,10 +36,20 @@ RUN dotnet publish "FitYouFood.API.csproj" -c Release -o /app/publish /p:UseAppH
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS final
 WORKDIR /app
 
-COPY --from=build /app/publish .
+# Copy the published files from the build image
+COPY --from=build /app/publish ./
 
+# Copy the .csproj files to the final image (optional)
+COPY --from=build /src/FitYouFood/FitYouFood.API.csproj ./FitYouFood/
+COPY --from=build /src/FitYouFood.Core/FitYouFood.Core.csproj ./FitYouFood.Core/
+COPY --from=build /src/FitYouFood.Infrastructure/FitYouFood.Infrastructure.csproj ./FitYouFood.Infrastructure/
+COPY --from=build /src/FitYouFood.Tests/FitYouFood.Tests.csproj ./FitYouFood.Tests/
+
+# Install dotnet-sonarscanner tool
 RUN dotnet tool install --global dotnet-sonarscanner
 
+# Expose port for the application
 EXPOSE 80
 
+# Set entrypoint to run the API
 ENTRYPOINT ["dotnet", "FitYouFood.API.dll"]
