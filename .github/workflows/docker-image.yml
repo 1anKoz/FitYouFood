@@ -22,17 +22,14 @@ jobs:
             - name: Build, start and test services
               run: docker compose -f compose.yaml up --build -d
 
-            - name: Poka konenerki
-              run: docker ps
-
             - name: Wait for Services to Start
               run: |
-                  sleep 110
+                  sleep 70
                   docker logs $(docker ps -q -f name=sonarqube)
 
             - name: SonarQube Analysis (.NET)
               run: |
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin /k:"fityoufood-backend" /d:sonar.host.url="http://sonarqube:9000"
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin /k:"fityoufood-backend" /d:sonar.host.url=http://sonarqube:9000
 
                   docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
