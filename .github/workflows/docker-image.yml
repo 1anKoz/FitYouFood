@@ -30,7 +30,7 @@ jobs:
             # Step to check if SonarQube API is reachable
             - name: Test SonarQube API
               run: |
-                curl -X GET http://localhost:9000/api/settings/values || echo "SonarQube API is not reachable"
+                curl -X GET http://sonarqube:9000/api/settings/values || echo "SonarQube API is not reachable"
 
             - name: SonarQube Analysis (.NET)
               run: |
