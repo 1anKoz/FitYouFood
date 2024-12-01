@@ -29,7 +29,7 @@ jobs:
 
             - name: SonarQube Analysis (.NET)
               run: |
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin /k:"fityoufood-backend" /d:sonar.host.url=http://sonarqube:9000 /d:sonar.projectName="FitYouFood Backend" /d:sonar.projectVersion="1.0"
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin /k:"fityoufood-backend-test" /d:sonar.host.url=http://sonarqube:9000 /n:="FitYouFood Backend" /v:="1.0"
 
                   docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
