@@ -20,7 +20,6 @@ services:
       /bin/sh -c "dotnet tool install --global dotnet-sonarscanner && dotnet restore FitYouFood/FitYouFood.API.csproj && dotnet build FitYouFood/FitYouFood.API.csproj"
     stdin_open: true
     tty: true
-    entrypoint: /bin/bash
   
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
