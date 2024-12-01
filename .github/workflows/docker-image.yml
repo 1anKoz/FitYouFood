@@ -32,9 +32,6 @@ jobs:
 
     - name: SonarQube Analysis (.NET)
       run: |
-
-        docker exec -i $(docker ps -q -f name=fityoufood-app) export PATH="$PATH:/root/.dotnet/tools"
-
         docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
           /k:"fityoufood-backend" \
           /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
