@@ -1,6 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
+RUN dotnet add package prometheus-net.AspNetCore
 RUN dotnet tool install --global dotnet-sonarscanner
 
 ENV PATH="${PATH}:/root/.dotnet/tools"

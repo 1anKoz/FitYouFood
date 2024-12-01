@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Prometheus; // Add Prometheus namespace
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Register your services as before
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
@@ -19,7 +21,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IIngredientAmountService, IngredientAmountService>();
 builder.Services.AddScoped<IMealService, MealService>();
-builder.Services.AddDbContext<FitYouFoodDbContext>(options => 
+builder.Services.AddDbContext<FitYouFoodDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
@@ -55,10 +57,10 @@ builder.Services.AddAuthentication(options =>
 
 // Add services to the container.
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Swagger setup
 builder.Services.AddSwaggerGen(option =>
 {
     option.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -106,6 +108,9 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Register the metrics endpoint
+app.UseMetricServer();  // Expose the /metrics endpoint for Prometheus scraping
 
 app.MapControllers();
 
