@@ -32,7 +32,7 @@ jobs:
     - name: SonarQube Analysis (.NET)
       run: |
 
-        docker exec -it $(docker ps -q -f name=fityoufood-app) bash -c 'export PATH="$PATH:/root/.dotnet/tools"'
+        docker exec -it $(docker ps -q -f name=fityoufood-app) bash -c "export PATH="$PATH:/root/.dotnet/tools""
 
         docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
           /k:"fityoufood-backend" \
