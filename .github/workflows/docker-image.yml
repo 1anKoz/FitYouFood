@@ -25,38 +25,21 @@ jobs:
       run: docker compose -f compose.yaml up --build -d
 
     - name: Wait for Services to Start
-      run: sleep 30
+      run: |
+        sleep 200
+        docker logs $(docker ps -q -f name=sonarqube)
 
-    # - name: Wait for SonarQube
-    #   run: |
-    #     timeout=1000
-    #     interval=10
-    #     elapsed=0
-    #     while ! curl -sf ${{ secrets.SONARQUBE_HOST }}/api/system/health | grep -q "GREEN"; do
-    #       echo "Waiting for SonarQube to start... ($elapsed seconds elapsed)"
-    #       echo "curl -sf ${{ secrets.SONARQUBE_HOST }}/api/system/health"
-    #       sleep $interval
-    #       elapsed=$((elapsed + interval))
-    #       if [ $elapsed -ge $timeout ]; then
-    #         echo "SonarQube did not start within $timeout seconds."
-    #         echo "Check SonarQube logs for errors."
-    #         docker logs $(docker ps -q -f name=sonarqube)
-    #         exit 1
-    #       fi
-    #     done
-    #     echo "SonarQube is ready!"
-
-    # - name: SonarQube Analysis (.NET)
-    #   run: |
-    #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet tool install --global dotnet-sonarscanner
-    #     docker exec $(docker ps -q -f name=fityoufood-app) bash -c 'export PATH="$PATH:/root/.dotnet/tools" && echo $PATH'
-    #     sudo docker exec $(docker ps -q -f name=fityoufood-app) echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
-    #     sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
-    #       /k:"fityoufood-backend" \
-    #       /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
-    #       /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
-    #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
-    #     docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+    - name: SonarQube Analysis (.NET)
+      run: |
+        docker exec $(docker ps -q -f name=fityoufood-app) dotnet tool install --global dotnet-sonarscanner
+        docker exec $(docker ps -q -f name=fityoufood-app) bash -c 'export PATH="$PATH:/root/.dotnet/tools" && echo $PATH'
+        sudo docker exec $(docker ps -q -f name=fityoufood-app) echo "${HOME}/.dotnet/tools" >> $GITHUB_PATH
+        sudo docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
+          /k:"fityoufood-backend" \
+          /d:sonar.host.url="${{ secrets.SONARQUBE_HOST }}" \
+          /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
+        docker exec $(docker ps -q -f name=fityoufood-app) dotnet build
+        docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONARQUBE_TOKEN }}"
 
     - name: Verify Metrics Endpoint
       run: |

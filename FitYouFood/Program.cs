@@ -98,6 +98,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Register the Prometheus middleware
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+    // Add this for Prometheus metrics endpoint
+    endpoints.MapMetrics();  // This maps the /metrics endpoint
+});
+
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
@@ -108,9 +116,6 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Register the metrics endpoint
-app.UseMetricServer();  // Expose the /metrics endpoint for Prometheus scraping
 
 app.MapControllers();
 
