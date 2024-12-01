@@ -27,9 +27,14 @@ jobs:
                   sleep 50
                   docker logs $(docker ps -q -f name=sonarqube)
 
+            # Step to check if SonarQube API is reachable
+            - name: Test SonarQube API
+              run: |
+                curl -X GET http://localhost:9000/api/settings/values || echo "SonarQube API is not reachable"
+
             - name: SonarQube Analysis (.NET)
               run: |
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin /k:"backend-dotnet" /d:sonar.host.url="http://sonarqube:9000"
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin /k:"backend-dotnet" /d:sonar.host.url=http://sonarqube:9000 /d:sonar.verbose=true
 
                   docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
