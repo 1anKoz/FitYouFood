@@ -40,6 +40,7 @@ WORKDIR /app
 COPY --from=build /app/publish ./
 
 # Copy the .csproj files to the final image (optional)
+COPY --from=build /src/FitYouFood/Program.cs ./FitYouFood/
 COPY --from=build /src/FitYouFood/FitYouFood.API.csproj ./FitYouFood/
 COPY --from=build /src/FitYouFood.Core/FitYouFood.Core.csproj ./FitYouFood.Core/
 COPY --from=build /src/FitYouFood.Infrastructure/FitYouFood.Infrastructure.csproj ./FitYouFood.Infrastructure/
