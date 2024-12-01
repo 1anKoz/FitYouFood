@@ -27,7 +27,7 @@ jobs:
 
     - name: Testowanie super testy jednostkowe komenda kontener
       run: |
-        docker exec -it $(docker ps -q -f name=fityoufood-app) bash -c "pwd"
+        docker exec -i $(docker ps -q -f name=fityoufood-app) bash -c "pwd"
 
     - name: Wait for Services to Start
       run: |
@@ -37,7 +37,7 @@ jobs:
     - name: SonarQube Analysis (.NET)
       run: |
 
-        docker exec $(docker ps -q -f name=fityoufood-app) bash -c "export PATH="$PATH:/root/.dotnet/tools""
+        docker -i exec $(docker ps -q -f name=fityoufood-app) bash -c "export PATH="$PATH:/root/.dotnet/tools""
 
         docker exec $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner begin \
           /k:"fityoufood-backend" \
