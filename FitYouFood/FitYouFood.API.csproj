@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FitYouFood.Core\FitYouFood.Core.csproj" />
     <ProjectReference Include="..\FitYouFood.Infrastructure\FitYouFood.Infrastructure.csproj" />
   </ItemGroup>
 
