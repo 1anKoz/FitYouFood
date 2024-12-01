@@ -22,9 +22,12 @@ jobs:
             - name: Build, start and test services
               run: docker compose -f compose.yaml up --build -d
 
+            - name: Poka konenerki
+              run: docker ps
+
             - name: Wait for Services to Start
               run: |
-                  sleep 130
+                  sleep 110
                   docker logs $(docker ps -q -f name=sonarqube)
 
             - name: SonarQube Analysis (.NET)
