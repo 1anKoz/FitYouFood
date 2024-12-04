@@ -31,20 +31,12 @@ jobs:
               run: |
                   curl -f http://localhost:8080/metrics || echo "Metrics endpoint not available"
 
-            - name: Generate SonarQube Token
-              run: |
-                SONAR_TOKEN=$(curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=github-action-token" | jq -r '.token')
-                echo "Generated SONAR_TOKEN: ${SONAR_TOKEN}" # Debugging step to check the value
-                echo "SONAR_TOKEN=${SONAR_TOKEN}" >> $GITHUB_ENV
-
-            - name: Set SonarQube Scanner environment
-              run: |
-                echo "sonar.host.url=http://localhost:9000" >> sonar-project.properties
-                echo "sonar.login=${{ env.SONAR_TOKEN }}" >> sonar-project.properties
+            - name: list containers
+              run: docker ps
 
             - name: SonarQube Analysis (.NET)
               run: |
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"your_project_key" /d:sonar.host.url="http://sonarqube:9000"
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"testing-backend-dot-net" /d:sonar.host.url=http://sonarqube:9000
 
                   docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
