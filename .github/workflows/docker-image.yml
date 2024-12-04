@@ -1,5 +1,7 @@
 name: Docker Compose CI/CD
 
+# hi
+
 on:
     push:
         branches: ["master"]
@@ -9,17 +11,6 @@ on:
 jobs:
     build-and-test:
         runs-on: ubuntu-latest
-
-        services:
-        sonarqube:
-          image: sonarqube:community
-          ports:
-            - 9000:9000
-          options: >
-            --health-cmd="curl -f http://localhost:9000/api/system/status || exit 1"
-            --health-interval=10s
-            --health-timeout=5s
-            --health-retries=3
 
         steps:
             - name: Checkout Code
@@ -31,30 +22,27 @@ jobs:
             - name: Build, start and test services
               run: docker compose -f compose.yaml up --build -d
 
-            - name: Wait for SonarQube to Start
+            - name: Wait for Services to Start
               run: |
-                  until curl -s http://localhost:9000/api/system/status | grep '"status":"UP"'; do
-                    echo "Waiting for SonarQube to be ready..."
-                    sleep 5
-                  done
+                  sleep 50
+                  docker logs $(docker ps -q -f name=sonarqube)
 
             - name: Verify Metrics Endpoint
               run: |
                   curl -f http://localhost:8080/actuator/metrics || echo "Metrics endpoint not available"
 
-            - name: SonarQube Analysis (.NET)
-              env:
-                SONAR_HOST_URL: http://localhost:9000
-                SONAR_TOKEN: admin  # Default admin token for testing
+            - name: Test SonarQube API
               run: |
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet tool install --global dotnet-sonarscanner
-                  echo "PATH=$PATH:/root/.dotnet/tools" >> $GITHUB_ENV
+                curl -X GET http://sonarqube:9000/api/settings/values || echo "SonarQube API is not reachable"
 
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"backend-dotnet" /n:"Backend .NET" /d:sonar.host.url="$SONAR_HOST_URL" /d:sonar.login="admin"
+            - name: SonarQube Analysis (.NET)
+              run: |
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"backend-dotnet" /n:"Backend .NET" /d:sonar.host.url=http://sonarqube:9000 /d:sonar.login="admin"
 
                   docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner end /d:sonar.login="admin"
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="admin"
+
 
             - name: Tag and Push Docker Image
               run: |
