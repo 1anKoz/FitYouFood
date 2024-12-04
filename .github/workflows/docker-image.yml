@@ -33,7 +33,7 @@ jobs:
 
             - name: Test SonarQube API
               run: |
-                curl -X GET http://sonarqube:9000/api/settings/values || echo "SonarQube API is not reachable"
+                curl -X GET http://localhost:9000/api/settings/values || echo "SonarQube API is not reachable"
 
             # - name: SonarQube Analysis (.NET)
             #   run: |
@@ -55,7 +55,7 @@ jobs:
             - name: Download Logs from Loggly
               run: |
                 curl -X GET "https://logs-01.loggly.com/api/search?" \
-                     -H "Authorization: Bearer bc759bfb-b8dc-499c-a924-d6a42f78134a" \
+                     -H "Authorization: Bearer "d04ed58b-c853-4c74-9716-c6cfa2882a94"" \
                      -d "query=tag:prometheus" \
                      -d "from=now-1h" \
                      -d "to=now" \
