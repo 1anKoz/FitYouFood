@@ -30,7 +30,7 @@ jobs:
             - name: Verify Metrics Endpoint
               run: |
                   curl -f http://localhost:8080/actuator/metrics || echo "Metrics endpoint not available"
-                  
+
             - name: Test SonarQube API
               run: |
                 curl -X GET http://sonarqube:9000/api/settings/values || echo "SonarQube API is not reachable"
@@ -41,7 +41,7 @@ jobs:
 
                   docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="sqp_e83681b13d9a9cdad5059b8890a3eafea020493e"
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="sqp_63bf828da394b86a83a71ed32188270fa8ce5aa4"
 
 
             - name: Tag and Push Docker Image
