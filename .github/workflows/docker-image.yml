@@ -39,6 +39,8 @@ jobs:
 
             - name: SonarQube Analysis (.NET)
               run: |
+                  docker exec -i $(docker ps -q -f name=fityoufoodapi-fityoufood-app-1) curl -u admin:admin -X POST "http://sonarqube:9000/api/projects/create?name=testing-backend-dot-net&project=testing-backend-dot-net"
+
                   docker exec -i $(docker ps -q -f name=fityoufoodapi-fityoufood-app-1) dotnet sonarscanner begin /k:"testing-backend-dot-net" /d:sonar.host.url="http://sonarqube:9000" /d:sonar.login="admin" /d:sonar.password="admin" /d:sonar.verbose=true
 
                   docker exec -i $(docker ps -q -f name=fityoufoodapi-fityoufood-app-1) dotnet build ./FitYouFood/FitYouFood.API.csproj
