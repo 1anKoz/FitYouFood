@@ -31,10 +31,11 @@ jobs:
               run: |
                   curl -f http://localhost:8080/metrics || echo "Metrics endpoint not available"
 
-            - name: list containers
+            - name: Inspect containers
               run: |
                   docker ps
                   curl http://localhost:9000
+                  docker network inspect app_network
 
             - name: SonarQube Analysis (.NET)
               run: |
