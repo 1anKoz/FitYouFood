@@ -32,11 +32,14 @@ jobs:
                   curl -f http://localhost:8080/metrics || echo "Metrics endpoint not available"
 
             - name: list containers
-              run: docker ps
+              run: |
+                  docker ps
+                  curl http://sonarqube:9000
+                  curl http://localhost:9000
 
             - name: SonarQube Analysis (.NET)
               run: |
-                  docker exec -i $(docker ps -q -f name=fityoufoodapi-fityoufood-app-1) dotnet sonarscanner begin /k:"testing-backend-dot-net" /d:sonar.host.url=http://sonarqube:9000 /d:sonar.login="admin" /d:sonar.password="admin"
+                  docker exec -i $(docker ps -q -f name=fityoufoodapi-fityoufood-app-1) dotnet sonarscanner begin /k:"testing-backend-dot-net" /d:sonar.host.url="http://sonarqube:9000" /d:sonar.login="admin" /d:sonar.password="admin" /d:sonar.verbose=true
 
                   docker exec -i $(docker ps -q -f name=fityoufoodapi-fityoufood-app-1) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
