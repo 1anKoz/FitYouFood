@@ -1,0 +1,39 @@
+name: SonarQube Analysis
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    services:
+      sonarqube:
+        image: sonarqube:latest
+        container_name: sonarqube
+        ports:
+          - "9000:9000"
+        options: --health-cmd="curl --silent --fail http://localhost:9000/api/system/health" --health-timeout=10s --health-retries=3
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Set up SonarQube token
+      id: sonar_token
+      run: |
+        # Generate a SonarQube token if not already provided
+        SONAR_TOKEN=$(curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=github-action-token" | jq -r '.token')
+        echo "SONAR_TOKEN=${SONAR_TOKEN}" >> $GITHUB_ENV
+
+    - name: Build and scan the project
+      run: |
+        docker-compose -f docker-compose.yml up -d sonarqube
+        docker-compose -f docker-compose.yml run --rm fityoufood-app
