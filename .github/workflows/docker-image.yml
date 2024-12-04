@@ -33,12 +33,12 @@ jobs:
 
             - name: Generate SonarQube Token
               run: |
-                SONAR_TOKEN=$(curl -u admin:admin -X POST "http://sonarqube:9000/api/user_tokens/generate" -d "name=github-action-token" | jq -r '.token')
+                SONAR_TOKEN=$(curl -u admin:admin -X POST "http://localhost:9000/api/user_tokens/generate" -d "name=github-action-token" | jq -r '.token')
                 echo "SONAR_TOKEN=${SONAR_TOKEN}" >> $GITHUB_ENV
 
             - name: Set SonarQube Scanner environment
               run: |
-                echo "sonar.host.url=http://sonarqube:9000" >> sonar-project.properties
+                echo "sonar.host.url=http://localhost:9000" >> sonar-project.properties
                 echo "sonar.login=${{ env.SONAR_TOKEN }}" >> sonar-project.properties
 
             - name: SonarQube Analysis (.NET)
