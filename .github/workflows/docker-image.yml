@@ -35,13 +35,13 @@ jobs:
               run: |
                 curl -X GET http://localhost:9000/api/settings/values || echo "SonarQube API is not reachable"
 
-            # - name: SonarQube Analysis (.NET)
-            #   run: |
-            #       docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"backend-dotnet" /n:"Backend .NET" /d:sonar.host.url=http://sonarqube:9000 /d:sonar.login="admin"
+            - name: SonarQube Analysis (.NET)
+              run: |
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"backend-dotnet" /n:"Backend .NET" /d:sonar.host.url=http://localhost:9000 /d:sonar.login="admin"
 
-            #       docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
-            #       docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="admin"
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="admin"
 
 
             - name: Tag and Push Docker Image
