@@ -54,13 +54,7 @@ jobs:
 
             - name: Download Logs from Loggly
               run: |
-                curl -X GET "https://polibudacicd.loggly.com/api/search?" \
-                     -H "Authorization: Bearer bc759bfb-b8dc-499c-a924-d6a42f78134a" \
-                     -d "query=tag:prometheus" \
-                     -d "from=now-1h" \
-                     -d "to=now" \
-                     -d "size=100" \
-                     -o loggly_logs.json
+                curl -H 'Authorization: bearer d04ed58b-c853-4c74-9716-c6cfa2882a94' "https://polibudacicd.loggly.com/apiv2/search?q=*&from=-2h&until=now&size=10" -o loggly_logs.json
 
                 # Optionally, you can output the logs
                 cat loggly_logs.json
