@@ -35,7 +35,7 @@ jobs:
               run: |
                   docker ps
                   curl http://localhost:9000
-                  docker network inspect app_network
+                  docker network ls
 
             - name: SonarQube Analysis (.NET)
               run: |
