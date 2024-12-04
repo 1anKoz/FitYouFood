@@ -43,11 +43,11 @@ jobs:
 
             - name: SonarQube Analysis (.NET)
               run: |
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"backend-dotnet" /n:"Backend .NET" /d:sonar.host.url=http://sonarqube:9000 /d:sonar.login="admin"
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"your_project_key" /d:sonar.host.url="http://sonarqube:9000" /d:sonar.login="${{ env.SONAR_TOKEN }}"
 
                   docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="admin"
+                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="${{ env.SONAR_TOKEN }}"
 
 
             - name: Tag and Push Docker Image
