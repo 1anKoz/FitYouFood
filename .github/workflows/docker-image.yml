@@ -55,7 +55,7 @@ jobs:
             - name: Download Logs from Loggly
               run: |
                 curl -X GET "https://logs-01.loggly.com/api/search?" \
-                     -H "Authorization: Bearer "d04ed58b-c853-4c74-9716-c6cfa2882a94"" \
+                     -H "Authorization: Bearer d04ed58b-c853-4c74-9716-c6cfa2882a94" \
                      -d "query=tag:prometheus" \
                      -d "from=now-1h" \
                      -d "to=now" \
