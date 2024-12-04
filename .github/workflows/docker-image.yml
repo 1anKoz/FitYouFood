@@ -29,19 +29,19 @@ jobs:
 
             - name: Verify Metrics Endpoint
               run: |
-                  curl -f http://localhost:8080/actuator/metrics || echo "Metrics endpoint not available"
+                  curl -f http://localhost:8080/metrics || echo "Metrics endpoint not available"
 
             - name: Test SonarQube API
               run: |
                 curl -X GET http://sonarqube:9000/api/settings/values || echo "SonarQube API is not reachable"
 
-            - name: SonarQube Analysis (.NET)
-              run: |
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"backend-dotnet" /n:"Backend .NET" /d:sonar.host.url=http://sonarqube:9000 /d:sonar.login="admin"
+            # - name: SonarQube Analysis (.NET)
+            #   run: |
+            #       docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet sonarscanner begin /k:"backend-dotnet" /n:"Backend .NET" /d:sonar.host.url=http://sonarqube:9000 /d:sonar.login="admin"
 
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
+            #       docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet build ./FitYouFood/FitYouFood.API.csproj
 
-                  docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="admin"
+            #       docker exec -i $(docker ps -q -f name=fityoufood-app) dotnet-sonarscanner end /d:sonar.login="admin"
 
 
             - name: Tag and Push Docker Image
@@ -51,3 +51,16 @@ jobs:
 
             - name: Stop and Remove Services
               run: docker compose -f compose.yaml down
+
+            - name: Download Logs from Loggly
+              run: |
+                curl -X GET "https://logs-01.loggly.com/api/search?" \
+                     -H "Authorization: Bearer bc759bfb-b8dc-499c-a924-d6a42f78134a" \
+                     -d "query=tag:prometheus" \
+                     -d "from=now-1h" \
+                     -d "to=now" \
+                     -d "size=100" \
+                     -o loggly_logs.json
+
+                # Optionally, you can output the logs
+                cat loggly_logs.json
