@@ -31,9 +31,15 @@ jobs:
               run: |
                   curl -f http://localhost:8080/metrics || echo "Metrics endpoint not available"
 
-            - name: Test SonarQube API
+            - name: Generate SonarQube Token
               run: |
-                curl -X GET http://localhost:9000/api/settings/values || echo "SonarQube API is not reachable"
+                SONAR_TOKEN=$(curl -u admin:admin -X POST "http://sonarqube:9000/api/user_tokens/generate" -d "name=github-action-token" | jq -r '.token')
+                echo "SONAR_TOKEN=${SONAR_TOKEN}" >> $GITHUB_ENV
+
+            - name: Set SonarQube Scanner environment
+              run: |
+                echo "sonar.host.url=http://sonarqube:9000" >> sonar-project.properties
+                echo "sonar.login=${{ env.SONAR_TOKEN }}" >> sonar-project.properties
 
             - name: SonarQube Analysis (.NET)
               run: |
@@ -54,7 +60,7 @@ jobs:
 
             - name: Download Logs from Loggly
               run: |
-                curl -H 'Authorization: bearer d04ed58b-c853-4c74-9716-c6cfa2882a94' "https://polibudacicd.loggly.com/apiv2/search?q=*&from=-2h&until=now&size=10" -o loggly_logs.json
+                curl -H 'Authorization: bearer bc759bfb-b8dc-499c-a924-d6a42f78134a' "https://polibudacicd.loggly.com/apiv2/search?q=*&from=-2h&until=now&size=10" -o loggly_logs.json
 
                 # Optionally, you can output the logs
                 cat loggly_logs.json
