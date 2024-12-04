@@ -34,7 +34,6 @@ jobs:
             - name: Inspect containers
               run: |
                   docker ps
-                  curl http://172.18.0.4:9000
                   docker inspect fityoufoodapi_app_network
 
             - name: SonarQube Analysis (.NET)
