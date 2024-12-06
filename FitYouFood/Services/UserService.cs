@@ -9,6 +9,14 @@ namespace FitYouFood.API.Services
 {
     public class UserService(UserManager<User> _userManager, FitYouFoodDbContext _context) : IUserService
     {
+        public async Task<bool> IsAdmin(string userId)
+        {
+            var roles = await _context.Roles.Where(r => r.Id == userId).ToListAsync();
+
+            return roles.Any(r => r.NormalizedName== "ADMIN");
+        }
+
+
         public async Task<User> GetUserByIdAsync(string userId)
         {
             return await _userManager.FindByIdAsync(userId);

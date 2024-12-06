@@ -4,6 +4,7 @@ using FitYouFood.API.Dtos.Meal;
 using FitYouFood.API.Services;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
+using FitYouFood.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -167,6 +168,11 @@ namespace FitYouFood.API.Controllers
         [HttpDelete("{userId}/RemoveMeal/{mealId}")]
         public async Task<IActionResult> RemoveUserMeal(string userId, int mealId)
         {
+            var id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
+
+            if (!await _userService.IsAdmin(id))
+                return Unauthorized("Only admin can remove meals.");
+
             var result = await _userService.RemoveMeal(userId, mealId);
             if (!result)
                 return BadRequest("Could not remove meal from user.");
