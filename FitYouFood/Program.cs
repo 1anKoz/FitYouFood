@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,8 +50,10 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = builder.Configuration["JWT:Audience"],
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
-            System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]))
+        System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])),
+        NameClaimType = ClaimTypes.NameIdentifier // Ensure the "NameIdentifier" claim is recognized
     };
+
 });
 
 // Add services to the container.

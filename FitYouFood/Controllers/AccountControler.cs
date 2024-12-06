@@ -4,10 +4,12 @@ using FitYouFood.API.Dtos.Meal;
 using FitYouFood.API.Services;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FitYouFood.API.Controllers
 {
@@ -172,11 +174,20 @@ namespace FitYouFood.API.Controllers
             return Ok("Meal removed successfully.");
         }
 
-        [HttpGet("{userId}/Meals")]
-        public async Task<IActionResult> GetUserMeals(string userId)
+        [Authorize]
+        [HttpGet("/Meals")]
+        public async Task<IActionResult> GetUserMeals()
         {
+            var _id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-            var meals = _mapper.Map<ICollection<MealDto>>(await _userService.GetMeals(userId));
+            if (_id == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+
+            //var meals = _mapper.Map<ICollection<MealDto>>(await _userService.GetMeals(userId));
+
+            var meals = _mapper.Map<ICollection<MealDto>>(await _userService.GetMeals(_id));
+
             if (meals == null || meals.Count == 0)
                 return NotFound("No meals found for the user.");
 
