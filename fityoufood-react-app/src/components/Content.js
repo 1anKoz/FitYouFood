@@ -4,24 +4,24 @@ import axios from 'axios';
 
 const Content = () => {
     const [exerciseData, setExerciseData] = useState([]);
-    const [loading, setLoading] = useState(true); // State to track loading status
+    const [loading, setLoading] = useState(true); 
 
-    // Fetch exercise data when the component mounts
     useEffect(() => {
-        const fetchExerciseData = async () => {
-            try {
-                const response = await axios.get('http://fityoufood-app-backend:80/Exercise');
-                setExerciseData(response.data); 
-                console.log(response.data)
-                setLoading(false); // Set loading to false after data is fetched
-            } catch (error) {
-                console.error("Error fetching exercise data:", error);
-                setLoading(false); // Set loading to false even if there's an error
-            }
-        };
-
         fetchExerciseData();
-    }, []); // Empty dependency array ensures this runs only once when the component mounts
+    }, []); 
+
+    const fetchExerciseData = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/Exercise');
+            setExerciseData(response.data); 
+            console.log(response.data);
+            setLoading(false); 
+        } catch (error) {
+            console.error("Error fetching exercise data:", error);
+            setLoading(false); 
+        }
+    };
+
 
     return (
         <div>
@@ -32,7 +32,7 @@ const Content = () => {
                 {/* Conditionally render loading state or exercise data */}
                 <h3>Exercise List</h3>
                 {loading ? (
-                    <p>Loading exercise data...</p> // Show this while data is being fetched
+                    <p>Loading exercise data...</p> 
                 ) : (
                     <ul>
                         {exerciseData.length > 0 ? (
@@ -49,7 +49,7 @@ const Content = () => {
                                 </li>
                             ))
                         ) : (
-                            <p>No exercises available.</p> // Show this if there are no exercises
+                            <p>No exercises available.</p>
                         )}
                     </ul>
                 )}

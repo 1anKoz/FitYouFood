@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import './Auth.css'
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -24,7 +25,7 @@ const Register = () => {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="username">Username</label>
-                    <input
+                    <input class="auth-input"
                         type="text"
                         id="username"
                         value={username}
@@ -34,7 +35,7 @@ const Register = () => {
                 </div>
                 <div>
                     <label htmlFor="email">Email</label>
-                    <input
+                    <input class="auth-input"
                         type="email"
                         id="email"
                         value={email}
@@ -44,7 +45,7 @@ const Register = () => {
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
-                    <input
+                    <input class="auth-input"
                         type="password"
                         id="password"
                         value={password}
@@ -54,7 +55,7 @@ const Register = () => {
                 </div>
                 <div>
                     <label htmlFor="confirmPassword">Confirm Password</label>
-                    <input
+                    <input class="auth-input"
                         type="password"
                         id="confirmPassword"
                         value={confirmPassword}
@@ -63,7 +64,7 @@ const Register = () => {
                     />
                 </div>
                 <div>
-                    <button type="submit">Register</button>
+                    <button class="auth-button" type="submit">Register</button>
                 </div>
                 <div>
                     <Link to='/'>

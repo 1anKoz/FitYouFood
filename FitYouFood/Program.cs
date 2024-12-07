@@ -13,6 +13,18 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins", policy =>
+    {
+        policy.WithOrigins("http://localhost")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IExerciseService, ExerciseService>();
@@ -97,6 +109,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowSpecificOrigins");
 
 app.UseRouting();
 app.UseEndpoints(endpoints =>

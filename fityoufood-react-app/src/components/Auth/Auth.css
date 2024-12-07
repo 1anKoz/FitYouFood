@@ -1,0 +1,38 @@
+input {
+    width: 100%;
+    padding: 10px; 
+    border-radius: 5px; 
+    border: 1px solid #ccc; 
+    font-size: 16px; 
+    outline: none;
+    box-sizing: border-box;
+}
+
+input:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); 
+}
+
+input::placeholder {
+    color: #888;
+    font-style: italic;
+}
+
+.auth-button {
+    background-color: #a83c34;
+    color: white;
+    padding: 12px 22px;
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.5s ease, transform 0.5s ease;
+  }
+.auth-button:hover {
+background-color: green;
+transform: scale(1.2);
+}
+.auth-button:focus {
+outline: none;
+box-shadow: 0 0 10px rgba(50,200,120,0.6);
+}

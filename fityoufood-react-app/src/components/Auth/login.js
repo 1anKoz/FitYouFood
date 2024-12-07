@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import './Auth.css'
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -16,7 +17,7 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="username">Username</label>
-                    <input
+                    <input class="auth-input"
                         type="text"
                         id="username"
                         value={username}
@@ -26,7 +27,7 @@ const Login = () => {
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
-                    <input
+                    <input class="auth-input"
                         type="password"
                         id="password"
                         value={password}
@@ -35,7 +36,7 @@ const Login = () => {
                     />
                 </div>
                 <div>
-                    <button type="submit">Login</button>
+                    <button class="auth-button" type="submit">Login</button>
                 </div>
                 <div>
                     <Link to='/'>
