@@ -28,6 +28,27 @@
   color: #61dafb;
 }
 
+/* Przyciski dotyczące menu */
+.menu-buttons {
+  background-color: #a83c34;
+  color: white;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.5s ease, transform 0.5s ease;
+}
+.menu-buttons:hover {
+  background-color: green;
+  transform: scale(1.2);
+}
+.menu-buttons:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(50,200,120,0.6);
+}
+
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

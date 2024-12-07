@@ -1,10 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-const Login = () => (
-    <div>
-        <h2>Login Page</h2>
-        <button onClick={() => alert('Login clicked!')}>Login</button>
-    </div>
-);
+const Login = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        alert(`Logged in with username: ${username} and password: ${password}`);
+    };
+
+    return (
+        <div>
+            <h2>Login Page</h2>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="username">Username</label>
+                    <input
+                        type="text"
+                        id="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        placeholder="Enter username"
+                    />
+                </div>
+                <div>
+                    <label htmlFor="password">Password</label>
+                    <input
+                        type="password"
+                        id="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="Enter password"
+                    />
+                </div>
+                <div>
+                    <button type="submit">Login</button>
+                </div>
+                <div>
+                    <Link to='/'>
+                        <button>Back to main page</button>
+                    </Link>
+                </div>
+            </form>
+        </div>
+    );
+};
 
 export default Login;
