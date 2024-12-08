@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './Auth.css'
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
+    const loginToTheApp = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/AccountControler/login', {"userName": username, "password": password}, {headers: {'Content-Type': 'application/json'}})
+            console.log(response.data)
+        } catch (error) {
+            console.error("Error during logging in phase:", error)
+        }
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        alert(`Logged in with username: ${username} and password: ${password}`);
+        alert(`Logged in with username: ${username}`);
+        loginToTheApp();
     };
 
     return (
@@ -40,7 +51,7 @@ const Login = () => {
                 </div>
                 <div>
                     <Link to='/'>
-                        <button>Back to main page</button>
+                        <button class="auth-button">Back to main page</button>
                     </Link>
                 </div>
             </form>

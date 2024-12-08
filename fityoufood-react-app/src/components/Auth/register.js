@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Auth.css'
+import axios from 'axios';
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
+    const registerInTheApp = async () => {
+        try {
+            const response = await axios.post('http://localhost:8080/AccountControler/register', {"userName": username, "email": email , "password": password}, {headers: {'Content-Type': 'application/json'}})
+            console.log(response.data)
+        } catch (error) {
+            console.error("Error during registering phase:", error)
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -17,6 +27,7 @@ const Register = () => {
         }
 
         alert(`Registered with username: ${username}, email: ${email}`);
+        registerInTheApp();
     };
 
     return (
@@ -68,7 +79,7 @@ const Register = () => {
                 </div>
                 <div>
                     <Link to='/'>
-                        <button>Back to main page</button>
+                        <button class="auth-button">Back to main page</button>
                     </Link>
                 </div>
             </form>
