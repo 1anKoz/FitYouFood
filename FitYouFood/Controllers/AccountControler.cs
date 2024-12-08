@@ -4,10 +4,12 @@ using FitYouFood.API.Dtos.Meal;
 using FitYouFood.API.Services;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FitYouFood.API.Controllers
 {
@@ -92,10 +94,34 @@ namespace FitYouFood.API.Controllers
             }
         }
 
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateUserData(string userId, [FromBody] UserUpdateDto userDto)
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> GetUser()
         {
-            if (string.IsNullOrEmpty(userId) || !ModelState.IsValid)
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            var user = await _userService.GetUserByIdAsync(userId);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var userMap = _mapper.Map<UserUpdateDto>(user);
+
+            return Ok(userMap);
+        }
+
+        [Authorize]
+        [HttpPut]
+        public async Task<IActionResult> UpdateUserData([FromBody] UserUpdateDto userDto)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             // Retrieve the existing user from the database
@@ -121,10 +147,16 @@ namespace FitYouFood.API.Controllers
             return Ok("Successfully updated");
         }
 
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUser(string userId)
+        [Authorize]
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAccount()
         {
-            if (string.IsNullOrEmpty(userId) || !ModelState.IsValid)
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var existingUser = await _userService.GetUserByIdAsync(userId);
