@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import './Components.css';
 
 const Notification = () => {
     const [permission, setPermission] = useState(Notification.permission);
@@ -14,7 +15,7 @@ const Notification = () => {
 
     const showNotification = () => {
         if (permission === 'granted') {
-            new Notification('New Message!', { body: 'You have a new notification.' });
+            new Notification('New Message!', { body: 'You have to complete your daily workout!' });
         } else {
             alert('Notification permission not granted.');
         }
@@ -22,10 +23,10 @@ const Notification = () => {
 
     return (
         <div>
-            <button onClick={showNotification}>Show Notification</button>
+            <button className="component-button" onClick={showNotification}>Show Notification</button>
             <div>
                 <Link to='/'>
-                    <button>Back to main page</button>
+                    <button className="component-button">Back to main page</button>
                 </Link>
             </div>
         </div>

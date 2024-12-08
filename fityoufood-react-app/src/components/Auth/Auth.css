@@ -19,20 +19,38 @@ input::placeholder {
 }
 
 .auth-button {
-    background-color: #a83c34;
-    color: white;
-    padding: 12px 22px;
-    border: none;
-    border-radius: 10px;
-    font-size: 20px;
-    cursor: pointer;
-    transition: background-color 0.5s ease, transform 0.5s ease;
+    --b: 3px; 
+    --s: .45em;
+    --color: #cd44fa;
+    
+    padding: calc(.5em + var(--s)) calc(.9em + var(--s));
+    color: var(--color);
+    --_p: var(--s);
+    background:
+      conic-gradient(from 90deg at var(--b) var(--b),#0000 90deg,var(--color) 0)
+      var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+    transition: .3s linear, color 0s, background-color 0s;
+    outline: var(--b) solid #0000;
+    outline-offset: .6em;
+    font-size: 16px;
+  
+    border: 0;
+  
+    margin: 5px;
+  
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
   }
-.auth-button:hover {
-background-color: green;
-transform: scale(1.2);
-}
-.auth-button:focus {
-outline: none;
-box-shadow: 0 0 10px rgba(50,200,120,0.6);
-}
+  
+  .auth-button:hover,
+  .auth-button:focus-visible{
+    --_p: 0px;
+    outline-color: var(--color);
+    outline-offset: .05em;
+  }
+  
+  .auth-button:active {
+    background: var(--color);
+    color: #fff;
+  }
