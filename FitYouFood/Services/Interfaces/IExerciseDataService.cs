@@ -5,7 +5,7 @@ namespace FitYouFood.API.Services.Interfaces
     public interface IExerciseDataService
     {
         Task<ICollection<ExerciseData>> GetUserExerciseDatas(string userId);
-        Task<ExerciseData> GetExerciseData(int exerciseDataId);
+        Task<ExerciseData> GetExerciseData(int exerciseDataId, string userId);
 
         Task<bool> CreateExerciseData(ExerciseData exerciseData);
         Task<bool> UpdateExerciseData(ExerciseData exerciseData);

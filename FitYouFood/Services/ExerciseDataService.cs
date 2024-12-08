@@ -7,9 +7,9 @@ namespace FitYouFood.API.Services
 {
     public class ExerciseDataService(FitYouFoodDbContext _context) : IExerciseDataService
     {
-        public async Task<ExerciseData> GetExerciseData(int exerciseDataId)
+        public async Task<ExerciseData> GetExerciseData(int exerciseDataId, string userId)
         {
-            return await _context.ExerciseDatas.Where(ed => ed.Id == exerciseDataId).FirstOrDefaultAsync();
+            return await _context.ExerciseDatas.Where(ed => ed.Id == exerciseDataId && ed.UserId == userId).FirstOrDefaultAsync();
         }
 
         public async Task<ICollection<ExerciseData>> GetUserExerciseDatas(string userId)

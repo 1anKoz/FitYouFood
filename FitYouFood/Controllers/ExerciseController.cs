@@ -2,13 +2,16 @@
 using FitYouFood.API.Dtos.Exercise;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FitYouFood.API.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
-    public class ExerciseController(IExerciseService _exerciseService, IMapper _mapper) : ControllerBase
+    public class ExerciseController(IExerciseService _exerciseService, IMapper _mapper, IUserService _userService) : ControllerBase
     {
         [HttpGet("{exerciseId}")]
         public async Task<IActionResult> GetExercise(int exerciseId)
@@ -38,7 +41,15 @@ namespace FitYouFood.API.Controllers
         [HttpPost("CreateExercise")]
         public async Task<IActionResult> PostExercise([FromBody] ExerciseDto exerciseDto)
         {
-            if(exerciseDto == null || !ModelState.IsValid)
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!await _userService.IsAdmin(userId))
+                return Unauthorized("Only admins can delete ingredients from a meal");
+
+            if (exerciseDto == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var exerciseMap = _mapper.Map<Exercise>(exerciseDto);
@@ -55,7 +66,15 @@ namespace FitYouFood.API.Controllers
         [HttpPut("{exerciseId}")]
         public async Task<IActionResult> PutExercise (int exerciseId, [FromBody] ExerciseDto exerciseDto)
         {
-            if(exerciseDto == null || exerciseId != exerciseDto.Id || !ModelState.IsValid)
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!await _userService.IsAdmin(userId))
+                return Unauthorized("Only admins can delete ingredients from a meal");
+
+            if (exerciseDto == null || exerciseId != exerciseDto.Id || !ModelState.IsValid)
                 return BadRequest(ModelState);
             
             if(!await _exerciseService.ExerciseExistsAsync(exerciseId))
@@ -74,6 +93,14 @@ namespace FitYouFood.API.Controllers
         [HttpDelete("{exerciseId}")]
         public async Task<IActionResult> DeleteExercise (int exerciseId)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!await _userService.IsAdmin(userId))
+                return Unauthorized("Only admins can delete ingredients from a meal");
+
             if (!await _exerciseService.ExerciseExistsAsync(exerciseId))
                 return NotFound();
 

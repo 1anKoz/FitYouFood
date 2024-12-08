@@ -13,7 +13,7 @@ namespace FitYouFood.API.Dtos.ExerciseDataDtos
         public int? Difficulty { get; set; }
         public DateTime? WhenExercised { get; set; }
 
+        public int TrainingId { get; set; }
         public int ExerciseId { get; set; }
-        public string UserId { get; set; }
     }
 }
