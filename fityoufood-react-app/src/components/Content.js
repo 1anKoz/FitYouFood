@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import './Components.css';
+import { AuthContext } from './context/AuthContext';
 
 const Content = () => {
     const [exerciseData, setExerciseData] = useState([]);
     const [userTrainingData, setUserTrainingData] = useState([]);
     const [loadingExercise, setLoadingExercise] = useState(true); 
     const [loadingUserTraining, setLoadingUserTraining] = useState(true); 
+    const { user, login, logout } = useContext(AuthContext);
 
     useEffect(() => {
         const fetchData = async () => {

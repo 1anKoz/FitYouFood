@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import './Components.css';
+import { AuthContext } from './context/AuthContext';
 
 const Notification = () => {
     const [permission, setPermission] = useState(Notification.permission);
+    const { user, login, logout } = useContext(AuthContext);
 
     useEffect(() => {
         if (Notification.requestPermission) {

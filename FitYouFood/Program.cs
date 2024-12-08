@@ -8,10 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-//using Prometheus; 
 using System.Net.Http;
 using System.Security.Claims;
-using System.Text; 
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,8 +23,6 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod();
     });
 });
-
-
 
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -104,8 +101,6 @@ builder.Services.AddSwaggerGen(option =>
     });
 });
 
-builder.Services.AddHostedService<MetricsForwarder>();
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -116,7 +111,6 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowSpecificOrigins");
 
 app.UseRouting();
-
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
@@ -132,36 +126,4 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run();
-
-public class MetricsForwarder : BackgroundService
-{
-    private readonly HttpClient _httpClient;
-    private const string LogglyToken = "d04ed58b-c853-4c74-9716-c6cfa2882a94";
-    private const string LogglyUrl = $"https://logs-01.loggly.com/inputs/{LogglyToken}/tag/prometheus/";
-
-    public MetricsForwarder()
-    {
-        _httpClient = new HttpClient();
-    }
-
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-            {
-                var metrics = await _httpClient.GetStringAsync("http://localhost:80/metrics");
-
-                var content = new StringContent(metrics, Encoding.UTF8, "text/plain");
-                await _httpClient.PostAsync(LogglyUrl, content);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error forwarding metrics to Loggly: {ex.Message}");
-            }
-
-            await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken); 
-        }
-    }
-}
+app.Run("http://0.0.0.0:80");
