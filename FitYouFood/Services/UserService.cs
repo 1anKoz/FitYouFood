@@ -4,6 +4,7 @@ using FitYouFood.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Runtime.CompilerServices;
 
 namespace FitYouFood.API.Services
 {
@@ -76,6 +77,13 @@ namespace FitYouFood.API.Services
         {
             var saved = await _context.SaveChangesAsync();
             return saved > 0 ? true : false;
+        }
+
+        public async Task<bool> IsAdmin(string userId)
+        {
+            var roles = await _context.Roles.Where(r => r.Id == userId).ToListAsync();
+
+            return roles.Any(r => r.NormalizedName == "ADMIN");
         }
     }
 }

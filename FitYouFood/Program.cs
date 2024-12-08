@@ -8,7 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Prometheus; 
-using System.Net.Http; 
+using System.Net.Http;
+using System.Security.Claims;
 using System.Text; 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -65,6 +66,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(
             System.Text.Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])),
+        NameClaimType = ClaimTypes.NameIdentifier
     };
 });
 
@@ -114,13 +116,13 @@ app.UseCors("AllowSpecificOrigins");
 app.UseRouting();
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapMetrics();  
+    endpoints.MapMetrics();
 });
 
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
-    dbContext.Database.Migrate(); 
+    dbContext.Database.Migrate();
 }
 
 app.UseHttpsRedirection();
@@ -128,7 +130,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run("http://0.0.0.0:80");
+app.Run();
 
 public class MetricsForwarder : BackgroundService
 {

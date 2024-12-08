@@ -6,12 +6,17 @@ using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FitYouFood.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class MealController(IMealService _mealService, IIngredientService _ingredientService, IIngredientAmountService _ingredientAmountService, IMapper _mapper) : ControllerBase
+    public class MealController(IMealService _mealService,
+        IIngredientService _ingredientService,
+        IIngredientAmountService _ingredientAmountService,
+        IMapper _mapper, IUserService _userService
+        ) : ControllerBase
     {
         [HttpGet]
         public async Task<IActionResult> GetMeals()
@@ -122,6 +127,44 @@ namespace FitYouFood.API.Controllers
             await _mealService.DeleteIngredientAmount(ingredientAmount);
 
             return Ok("Deleted succesfully");
+        }
+
+
+
+        [HttpPost("/AddUserMeal/{mealId}")]
+        public async Task<IActionResult> AddUserMeal(int mealId)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _userService.AddMeal(userId, mealId);
+            if (!result)
+                return BadRequest("Could not add meal to user.");
+
+            return Ok("Meal added successfully.");
+        }
+
+        [HttpDelete("/RemoveUserMeal/{mealId}")]
+        public async Task<IActionResult> RemoveUserMeal(int mealId)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var result = await _userService.RemoveMeal(userId, mealId);
+            if (!result)
+                return BadRequest("Could not remove meal from user.");
+
+            return Ok("Meal removed successfully.");
+        }
+
+        [HttpGet("/UserMeals")]
+        public async Task<IActionResult> GetUserMeals()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var meals = _mapper.Map<ICollection<MealDto>>(await _userService.GetMeals(userId));
+            if (meals == null || meals.Count == 0)
+                return NotFound("No meals found for the user.");
+
+            return Ok(meals);
         }
     }
 }

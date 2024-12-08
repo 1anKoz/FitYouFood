@@ -13,5 +13,7 @@ namespace FitYouFood.API.Services.Interfaces
         Task<ICollection<Meal>> GetMeals(string userId);
         Task<bool> AddMeal(string userId, int mealId);
         Task<bool> RemoveMeal(string userId, int mealId);
+
+        Task<bool> IsAdmin(string userId);
     }
 }
