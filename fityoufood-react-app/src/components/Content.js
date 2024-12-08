@@ -5,30 +5,53 @@ import './Components.css';
 
 const Content = () => {
     const [exerciseData, setExerciseData] = useState([]);
-    const [loading, setLoading] = useState(true); 
+    const [userTrainingData, setUserTrainingData] = useState([]);
+    const [loadingExercise, setLoadingExercise] = useState(true); 
+    const [loadingUserTraining, setLoadingUserTraining] = useState(true); 
 
     useEffect(() => {
-        fetchExerciseData();
-    }, []); 
+        const fetchData = async () => {
+          await fetchExerciseData();
+          await fetchUserTrainingData();
+        };
+    
+        fetchData();
+    });
 
     const fetchExerciseData = async () => {
         try {
             const response = await axios.get('http://localhost:8080/Exercise');
             setExerciseData(response.data); 
             console.log(response.data);
-            setLoading(false); 
+            setLoadingExercise(false); 
         } catch (error) {
             console.error("Error fetching exercise data:", error);
-            setLoading(false); 
+            setLoadingExercise(false); 
+        }
+    };
+    const fetchUserTrainingData = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/Training', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            setUserTrainingData(response.data); 
+            console.log(response.data);
+            setLoadingUserTraining(false); 
+        } catch (error) {
+            console.error("Error fetching user training data:", error);
+            setLoadingUserTraining(false); 
         }
     };
 
     return (
         <div>
             <div className="main-content">
-                {/* Conditionally render loading state or exercise data */}
                 <h3>Exercise List</h3>
-                {loading ? (
+                <p>Username: {localStorage.getItem('username')}</p>
+                {loadingExercise ? (
                     <p>Loading exercise data...</p> 
                 ) : (
                     <ul>
@@ -47,6 +70,19 @@ const Content = () => {
                             ))
                         ) : (
                             <p>No exercises available.</p>
+                        )}
+                    </ul>
+                )}
+                {loadingUserTraining ? (
+                    <p>Loading user training data...</p>
+                ) : (
+                    <ul>
+                        {userTrainingData.length > 0 ? (
+                            userTrainingData.map((training) => (
+                                <p><strong>Training: </strong>{training}</p>
+                            ))
+                        ) : (
+                            <p>No training for user available.</p>
                         )}
                     </ul>
                 )}

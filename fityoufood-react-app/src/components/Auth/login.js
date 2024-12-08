@@ -11,6 +11,8 @@ const Login = () => {
         try {
             const response = await axios.post('http://localhost:8080/AccountControler/login', {"userName": username, "password": password}, {headers: {'Content-Type': 'application/json'}})
             console.log(response.data)
+            localStorage.setItem('token', response.data.token);
+            localStorage.setItem('username', response.data.userName);
         } catch (error) {
             console.error("Error during logging in phase:", error)
         }

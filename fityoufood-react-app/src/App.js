@@ -32,6 +32,7 @@ function App() {
                   <Link to="/login"><button class="menu-buttons">Login</button></Link> 
                   <Link to="/register"><button class="menu-buttons">Register</button></Link> 
                   <Link to="/notifications"><button class="menu-buttons">Notifications</button></Link>
+                  <p>{localStorage.getItem('username')}</p>
                 </nav>
                 
             </div>
