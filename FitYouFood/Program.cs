@@ -119,11 +119,11 @@ app.UseRouting();
 //    endpoints.MapMetrics();
 //});
 
-//using (var scope = app.Services.CreateScope())
-//{
-//    var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
-//    dbContext.Database.Migrate();
-//}
+using (var scope = app.Services.CreateScope())
+{
+   var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
+   dbContext.Database.Migrate();
+}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

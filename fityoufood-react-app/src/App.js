@@ -8,6 +8,7 @@ import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import Notification from './components/Notification';
 import { AuthContext } from './components/context/AuthContext';
+import UserConfig from './components/UserConfig';
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -34,7 +35,7 @@ function App() {
                   <Link to="/login"><button class="menu-buttons">Login</button></Link> 
                   <Link to="/register"><button class="menu-buttons">Register</button></Link> 
                   <Link to="/notifications"><button class="menu-buttons">Notifications</button></Link>
-                  <p>{localStorage.getItem('username')}</p>
+                  <Link to="/settings/user"><button class="menu-buttons">{localStorage.getItem('username')}</button></Link>
                 </nav>
                 
             </div>
@@ -46,6 +47,7 @@ function App() {
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
                       <Route path="/notifications" element={<Notification />} />
+                      <Route path="/settings/user" element={<UserConfig />} />
                   </Routes>
                 </div>
             </div>

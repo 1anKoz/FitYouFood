@@ -19,12 +19,12 @@ const UserConfig = () => {
     const fetchUserData = async () => {
         try {
             const response = await axios.get('http://localhost:8080/Exercise');
-            setExerciseData(response.data); 
+            // setExerciseData(response.data); 
             console.log(response.data);
-            setLoadingExercise(false); 
+            setLoadingUserData(false); 
         } catch (error) {
-            console.error("Error fetching exercise data:", error);
-            setLoadingExercise(false); 
+            console.error("Error fetching user data:", error);
+            setLoadingUserData(false); 
         }
     };
 
