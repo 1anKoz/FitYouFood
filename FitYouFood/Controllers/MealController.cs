@@ -4,12 +4,14 @@ using FitYouFood.API.Dtos.Meal;
 using FitYouFood.API.Services;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace FitYouFood.API.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class MealController(IMealService _mealService,
@@ -46,6 +48,14 @@ namespace FitYouFood.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostMeal([FromBody] MealCreateDto mealDto)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!await _userService.IsAdmin(userId))
+                return Unauthorized("Only admins can add meals");
+
             if (!ModelState.IsValid || mealDto == null)
                 return BadRequest(ModelState);
 
@@ -64,6 +74,14 @@ namespace FitYouFood.API.Controllers
         [HttpPut]
         public async Task<IActionResult> PutMeal(int mealId, [FromBody] MealUpdateDto mealDto)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!await _userService.IsAdmin(userId))
+                return Unauthorized("Only admins can edit meals");
+
             if (!ModelState.IsValid || mealDto == null)
                 return BadRequest(ModelState);
 
@@ -89,6 +107,14 @@ namespace FitYouFood.API.Controllers
         [HttpPost("{mealId}/Ingredients")]
         public async Task<IActionResult> AddIngredient(int mealId, [FromBody] IngredientAmountDto ingredientAmountDto)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!await _userService.IsAdmin(userId))
+                return Unauthorized("Only admins can add ingredients to a meal");
+
             if (!await _mealService.MealExistsAsync(mealId))
                 return NotFound("Meal not found");
 
@@ -104,6 +130,14 @@ namespace FitYouFood.API.Controllers
         [HttpPut("{mealId}/Ingredients/{ingredientId}")]
         public async Task<IActionResult> UpdateIngredient(int mealId, int ingredientId, [FromBody]IngredientAmountDto ingredientAmountDto)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!await _userService.IsAdmin(userId))
+                return Unauthorized("Only admins can edit ingredients in a meal");
+
             if (!await _ingredientAmountService.IngredientAmountExistsAsync(mealId, ingredientId))
                 return NotFound();
 
@@ -119,6 +153,14 @@ namespace FitYouFood.API.Controllers
         [HttpDelete("{mealId}/Ingredients/{ingredientId}")]
         public async Task<IActionResult> DeleteIngredient(int mealId, int ingredientId)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (!await _userService.IsAdmin(userId))
+                return Unauthorized("Only admins can delete ingredients from a meal");
+
             if (!await _ingredientAmountService.IngredientAmountExistsAsync(mealId, ingredientId))
                 return NotFound();
 
@@ -130,11 +172,13 @@ namespace FitYouFood.API.Controllers
         }
 
 
-
         [HttpPost("/AddUserMeal/{mealId}")]
         public async Task<IActionResult> AddUserMeal(int mealId)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
 
             var result = await _userService.AddMeal(userId, mealId);
             if (!result)
@@ -148,6 +192,9 @@ namespace FitYouFood.API.Controllers
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
             var result = await _userService.RemoveMeal(userId, mealId);
             if (!result)
                 return BadRequest("Could not remove meal from user.");
@@ -159,6 +206,9 @@ namespace FitYouFood.API.Controllers
         public async Task<IActionResult> GetUserMeals()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if(userId == null)
+                return Unauthorized("User ID claim not found in the token.");
 
             var meals = _mapper.Map<ICollection<MealDto>>(await _userService.GetMeals(userId));
             if (meals == null || meals.Count == 0)

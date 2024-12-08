@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Prometheus; 
+//using Prometheus; 
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text; 
@@ -114,16 +114,16 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowSpecificOrigins");
 
 app.UseRouting();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapMetrics();
-});
+//app.UseEndpoints(endpoints =>
+//{
+//    endpoints.MapMetrics();
+//});
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
-    dbContext.Database.Migrate();
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
+//    dbContext.Database.Migrate();
+//}
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
