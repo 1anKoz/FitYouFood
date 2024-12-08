@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './App.css';
 import logo from './logo.png';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
@@ -7,9 +7,11 @@ import Content from './components/Content';
 import Login from './components/Auth/Login';
 import Register from './components/Auth/Register';
 import Notification from './components/Notification';
+import { AuthContext } from './components/context/AuthContext';
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const { user, login, logout } = useContext(AuthContext);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 3000);
@@ -59,7 +61,7 @@ function App() {
       return (
         <div>
           <img src={logo} className="App-logo" alt="logo" />
-          <h1>Welcome to the FitYouFood!</h1>
+          <h1>Welcome {user.username} to the FitYouFood!</h1>
           <p>The best training and diet plan app on the planet.</p>
         </div>
       );
