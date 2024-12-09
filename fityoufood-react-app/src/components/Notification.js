@@ -4,28 +4,32 @@ import './Components.css';
 import { AuthContext } from './context/AuthContext';
 
 const Notification = () => {
-    const [permission, setPermission] = useState(Notification.permission);
+    const [permission, setPermission] = useState('default');  
     const { user, login, logout } = useContext(AuthContext);
 
     useEffect(() => {
-        if (Notification.requestPermission) {
+        if (Notification.permission === 'default') {
             Notification.requestPermission().then((permission) => {
-                setPermission(permission);
+                setPermission(permission);  
             });
+        } else {
+            setPermission(Notification.permission);  
         }
-    }, []);
+    }, []);  
 
     const showNotification = () => {
         if (permission === 'granted') {
             new Notification('New Message!', { body: 'You have to complete your daily workout!' });
         } else {
-            alert('Notification permission not granted.');
+            alert(`Notification permission not granted. Current permission: ${permission}`);
         }
     };
 
     return (
         <div>
-            <button className="component-button" onClick={showNotification}>Show Notification</button>
+            <button className="component-button" onClick={showNotification}>
+                Show Notification
+            </button>
             <div>
                 <Link to='/'>
                     <button className="component-button">Back to main page</button>
