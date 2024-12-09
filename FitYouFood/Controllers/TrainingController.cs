@@ -4,18 +4,26 @@ using FitYouFood.API.Dtos.Training;
 using FitYouFood.API.Services;
 using FitYouFood.API.Services.Interfaces;
 using FitYouFood.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FitYouFood.API.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     [ApiController]
     public class TrainingController(ITrainingService _trainingService, IExerciseDataService _exerciseDataService, IMapper _mapper) : ControllerBase
     {
         [HttpGet]
-        public async Task<IActionResult> GetUserTrainings(string userId)
+        public async Task<IActionResult> GetUserTrainings()
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
             var trainings = _mapper.Map<List<TrainingDto>>(await _trainingService.GetTrainings(userId));
 
             if (!ModelState.IsValid)
@@ -27,10 +35,15 @@ namespace FitYouFood.API.Controllers
         [HttpGet("{trainingId}")]
         public async Task<IActionResult> GetTraining(int trainingId)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
             if (!await _trainingService.TrainingExistsAsync(trainingId))
                 return NotFound();
 
-            var training = _mapper.Map<TrainingDto>(await _trainingService.GetTraining(trainingId));
+            var training = _mapper.Map<TrainingDto>(await _trainingService.GetTraining(trainingId, userId));
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -41,10 +54,17 @@ namespace FitYouFood.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PostTraining([FromBody]TrainingCreateDto trainingDto)
         {
-            if(trainingDto == null || !ModelState.IsValid)
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            if (trainingDto == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var trainingMap = _mapper.Map<Training>(trainingDto);
+
+            trainingMap.UserId = userId;
 
             if(!await _trainingService.CreateTraining(trainingMap))
             {
@@ -58,14 +78,29 @@ namespace FitYouFood.API.Controllers
         [HttpPut("{trainingId}")]
         public async Task<IActionResult> PutTraining(int trainingId, [FromBody]TrainingUpdateDto trainingDto)
         {
-            if(trainingDto == null || !ModelState.IsValid)
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
+            var training = await _trainingService.GetTraining(trainingId, userId);
+
+            if (training == null)
+                return NotFound();
+
+            if(training.UserId != userId)
+                return Unauthorized();
+
+            if (trainingDto == null || !ModelState.IsValid)
                 return BadRequest(ModelState);
             if (!await _trainingService.TrainingExistsAsync(trainingId))
                 return NotFound();
 
             var trainingMap = _mapper.Map<Training>(trainingDto);
 
-            if(!await _trainingService.CreateTraining(trainingMap))
+            trainingMap.UserId = userId;
+
+            if (!await _trainingService.UpdateTraining(trainingMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving");
                 return StatusCode(500, ModelState);
@@ -77,12 +112,24 @@ namespace FitYouFood.API.Controllers
         [HttpDelete("{trainingId}")]
         public async Task<IActionResult> DeleteTraining(int trainingId)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized("User ID claim not found in the token.");
+
             if (!await _trainingService.TrainingExistsAsync(trainingId))
                 return NotFound();
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var training = await _trainingService.GetTraining(trainingId);
+            var training = await _trainingService.GetTraining(trainingId, userId);
+
+            if (training == null)
+                return NotFound();
+
+            if (training.UserId != userId)
+                return Unauthorized();
+
             training.IsDeleted = true;
 
             if(!await _trainingService.UpdateTraining(training))
@@ -92,48 +139,6 @@ namespace FitYouFood.API.Controllers
             }
 
             return NoContent();
-        }
-
-
-        [HttpPost("{trainingId}/Exercise")]
-        public async Task<IActionResult> PostExercise(int trainingId, int exerciseDataId)
-        {
-            if (!await _trainingService.TrainingExistsAsync(trainingId) && !await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
-                return NotFound();
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var exerciseData = await _exerciseDataService.GetExerciseData(exerciseDataId);
-
-
-            exerciseData.TrainingId = trainingId;
-
-            if (!await _exerciseDataService.UpdateExerciseData(exerciseData))
-            {
-                ModelState.AddModelError("", "Something went wrong while adding Exercise");
-                return StatusCode(500, ModelState);
-            }
-            return Ok($"Successfully added exercise to training");
-        }
-
-        [HttpDelete("{trainingId}/Exercise/{exerciseDataId}")]
-        public async Task<IActionResult> DeleteExercise(int trainingId, int exerciseDataId)
-        {
-            if (!await _trainingService.TrainingExistsAsync(trainingId) && !await _exerciseDataService.ExerciseDataExistsAsync(exerciseDataId))
-                return NotFound();
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var exerciseData = await _exerciseDataService.GetExerciseData(exerciseDataId);
-
-            exerciseData.TrainingId = null;
-
-            if (!await _exerciseDataService.UpdateExerciseData(exerciseData))
-            {
-                ModelState.AddModelError("", "Something went wrong while deleting Exercise");
-                return StatusCode(500, ModelState);
-            }
-            return Ok($"Successfully deleted exercise from training");
         }
     }
 }

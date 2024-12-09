@@ -5,11 +5,12 @@ using FitYouFood.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Net.Http;
 using System.Security.Claims;
-using System.Text; 
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IIngredientService, IngredientService>();
 builder.Services.AddScoped<IIngredientAmountService, IngredientAmountService>();
 builder.Services.AddScoped<IMealService, MealService>();
+builder.Services.AddScoped<SeedService>();
 builder.Services.AddDbContext<FitYouFoodDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddIdentity<User, IdentityRole>(options =>
@@ -109,11 +111,14 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowSpecificOrigins");
 
 app.UseRouting();
-
 using (var scope = app.Services.CreateScope())
 {
-   var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
-   dbContext.Database.Migrate();
+    var dbContext = scope.ServiceProvider.GetRequiredService<FitYouFoodDbContext>();
+    var seedService = scope.ServiceProvider.GetRequiredService<SeedService>();
+
+    dbContext.Database.Migrate();
+
+    await seedService.SeedDataContextAsync();
 }
 
 app.UseHttpsRedirection();

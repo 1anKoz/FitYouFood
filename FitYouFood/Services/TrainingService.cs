@@ -7,9 +7,9 @@ namespace FitYouFood.API.Services
 {
     public class TrainingService(FitYouFoodDbContext _context) : ITrainingService
     {
-        public async Task<Training> GetTraining(int trainingid)
+        public async Task<Training> GetTraining(int? trainingId, string userId)
         {
-            return await _context.Trainings.Where(t => t.Id == trainingid).Include(t => t.ExerciseDatas).FirstOrDefaultAsync();
+            return await _context.Trainings.Where(t => t.Id == trainingId && t.UserId == userId).Include(t => t.ExerciseDatas).FirstOrDefaultAsync();
         }
 
         public async Task<ICollection<Training>> GetTrainings(string userId)

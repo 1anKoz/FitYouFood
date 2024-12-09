@@ -10,6 +10,5 @@ namespace FitYouFood.API.Dtos.Training
         public DateTime WhenTrained { get; set; }
         public ICollection<ExerciseData> ExerciseDatas { get; set; }
 
-        public string UserId { get; set; }
     }
 }

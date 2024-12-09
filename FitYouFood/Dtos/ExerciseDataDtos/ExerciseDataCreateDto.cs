@@ -11,6 +11,5 @@ namespace FitYouFood.API.Dtos.ExerciseDataDtos
 
         public int? TrainingId { get; set; }
         public int ExerciseId { get; set; }
-        public string UserId { get; set; }
     }
 }

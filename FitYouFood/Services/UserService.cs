@@ -81,9 +81,11 @@ namespace FitYouFood.API.Services
 
         public async Task<bool> IsAdmin(string userId)
         {
-            var roles = await _context.Roles.Where(r => r.Id == userId).ToListAsync();
+            var roles = await _context.UserRoles.Where(r => r.UserId == userId).ToListAsync();
 
-            return roles.Any(r => r.NormalizedName == "ADMIN");
+            var adminRole = await _context.Roles.FirstOrDefaultAsync(r => r.NormalizedName == "ADMIN");
+
+            return roles.Any(r => r.RoleId == adminRole.Id);
         }
     }
 }
