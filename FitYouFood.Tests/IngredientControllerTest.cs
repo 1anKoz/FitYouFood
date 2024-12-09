@@ -15,13 +15,21 @@ public class IngredientControllerTest
 {
     private readonly Mock<IIngredientService> _mockIngredientService;
     private readonly Mock<IMapper> _mockMapper;
+    private readonly Mock<IUserService> _mockUserService; // Added mock for IUserService
     private readonly IngredientController _controller;
 
     public IngredientControllerTest()
     {
         _mockIngredientService = new Mock<IIngredientService>();
         _mockMapper = new Mock<IMapper>();
-        _controller = new IngredientController(_mockIngredientService.Object, _mockMapper.Object);
+        _mockUserService = new Mock<IUserService>(); // Initialize the mock
+
+        // Pass all dependencies to the controller constructor
+        _controller = new IngredientController(
+            _mockIngredientService.Object,
+            _mockMapper.Object,
+            _mockUserService.Object
+        );
     }
 
     [Fact]

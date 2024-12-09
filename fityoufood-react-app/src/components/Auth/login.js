@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import axios from 'axios';
 import './Auth.css';
 import { AuthContext } from '../context/AuthContext'; 
@@ -8,6 +8,7 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const { login } = useContext(AuthContext); 
+    const navigate = useNavigate(); 
 
     const loginToTheApp = async () => {
         try {
@@ -18,9 +19,16 @@ const Login = () => {
             );
             console.log(response.data);
 
-            login({ username: response.data.userName, token: response.data.token });
+            if ( response.data === 'Invalid username!' ) {
+                alert('Invalid username or password.')
+            } else {
+                login({ username: response.data.userName, token: response.data.token });
+                navigate('/');
+            }
+
         } catch (error) {
             console.error('Error during login:', error);
+            alert(error)
         }
     };
 

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Components.css';
 import { AuthContext } from './context/AuthContext';
 
 const UserConfig = () => {
-    const [loadingUserData, setLoadingUserData] = useState(true); 
-    const [userData, setUserData] = useState(null); // Update to store a single user object
+    const [loadingUserData, setLoadingUserData] = useState(true);
+    const [userData, setUserData] = useState(null);
     const { user, logout } = useContext(AuthContext);
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const fetchData = async () => {
@@ -15,7 +16,7 @@ const UserConfig = () => {
         };
 
         fetchData();
-    }); // Empty dependency array ensures this runs only once
+    }, []); 
 
     const fetchUserData = async () => {
         if (!user || !user.token) {
@@ -31,12 +32,33 @@ const UserConfig = () => {
                     'Content-Type': 'application/json',
                 },
             });
+
             console.log(response.data);
-            setUserData(response.data); 
+            setUserData(response.data);
         } catch (error) {
             console.error('Error while fetching user data:', error);
         } finally {
-            setLoadingUserData(false); 
+            setLoadingUserData(false);
+        }
+    };
+
+    const deleteAccount = async () => {
+        try {
+            const response = await axios.delete('http://localhost:8080/AccountControler', {
+                headers: {
+                    'Authorization': `Bearer ${user.token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            console.log(response.data);
+
+            alert('Account deleted successfully.');
+            logout();
+            navigate('/');
+        } catch (error) {
+            console.error('Error while deleting account:', error);
+            alert('Failed to delete account.');
         }
     };
 
@@ -61,9 +83,9 @@ const UserConfig = () => {
                 )}
             </div>
             <div>
+                <button onClick={deleteAccount} className="component-button">Delete account</button>
                 <button onClick={logout} className="component-button">Log out</button>
             </div>
-
             <div>
                 <Link to='/'>
                     <button className="component-button">Back to main page</button>

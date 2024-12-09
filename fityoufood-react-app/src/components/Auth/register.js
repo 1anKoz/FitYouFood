@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate  } from 'react-router-dom';
 import './Auth.css'
 import axios from 'axios';
 
@@ -8,11 +8,20 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const navigate = useNavigate(); 
 
     const registerInTheApp = async () => {
         try {
-            const response = await axios.post('http://localhost:8080/AccountControler/register', {"userName": username, "email": email , "password": password}, {headers: {'Content-Type': 'application/json'}})
+            const response = await axios.post('http://localhost:8080/AccountControler/register',
+                 {"userName": username, 
+                    "email": email , 
+                    "password": password
+                }, {headers: {'Content-Type': 'application/json'}})
+
             console.log(response.data)
+
+            navigate('/');
+            
         } catch (error) {
             console.error("Error during registering phase:", error)
         }

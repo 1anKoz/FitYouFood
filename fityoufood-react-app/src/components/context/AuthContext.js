@@ -1,8 +1,12 @@
 import React, { createContext, useState } from 'react';
+import { Link, useNavigate  } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+
+    const navigate = useNavigate(); 
+
     const [user, setUser] = useState(() => {
         const token = localStorage.getItem('token');
         const username = localStorage.getItem('username');
@@ -14,6 +18,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('username', userData.username);
 
         setUser(userData);
+        navigate('/');
     };
 
     const logout = () => {
@@ -21,6 +26,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('username');
 
         setUser(null);
+        navigate('/');
     };
 
     return (
