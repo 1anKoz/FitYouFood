@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { AuthContext } from './context/AuthContext';
-import './Components.css';
+import { AuthContext } from '../../context/AuthContext';
+import '../AdminContent.css';
 
 const AddIngredient = () => {
     const { user } = useContext(AuthContext);

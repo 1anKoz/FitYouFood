@@ -3,9 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Components.css';
 import { AuthContext } from '../context/AuthContext';
-import  AddIngredient  from './AddIngredient'
-import DeleteIngredient from './DeleteIngredient'
-import ModifyIngredient from './ModifyIngredient'
+import  AddIngredient  from './Content/AddIngredient'
+import DeleteIngredient from './Content/DeleteIngredient'
+import ModifyIngredient from './Content/ModifyIngredient'
 
 const AdminPanel = () => {
     const { user, logout } = useContext(AuthContext);
