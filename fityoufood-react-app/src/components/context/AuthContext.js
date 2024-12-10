@@ -1,11 +1,8 @@
 import React, { createContext, useState } from 'react';
-import { Link, useNavigate  } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-
-    const navigate = useNavigate(); 
 
     const [user, setUser] = useState(() => {
         const token = localStorage.getItem('token');
@@ -18,15 +15,17 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('username', userData.username);
 
         setUser(userData);
-        navigate('/');
     };
 
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('username');
 
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({ type: 'LOGOUT' });
+        }
+
         setUser(null);
-        navigate('/');
     };
 
     return (

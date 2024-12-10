@@ -4,6 +4,8 @@ import axios from 'axios';
 import './Components.css';
 import { AuthContext } from './context/AuthContext';
 
+const CACHE_NAME = 'fityoufood-cache-v2';
+
 const Content = () => {
     const [exerciseData, setExerciseData] = useState([]);
     const [userTrainingData, setUserTrainingData] = useState([]);
@@ -16,37 +18,84 @@ const Content = () => {
           await fetchExerciseData();
           await fetchUserTrainingData();
         };
-    
+
         fetchData();
-    });
+    }, []);
 
     const fetchExerciseData = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/Exercise');
-            setExerciseData(response.data); 
-            console.log(response.data);
-            setLoadingExercise(false); 
+            // First, try to fetch from the API
+            const response = await axios.get('http://localhost:8080/Exercise', {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json',
+                }
+            });
+    
+            // If the request is successful, update state and cache the response
+            setExerciseData(response.data);
+            console.log('Fetched exercise data:', response.data);
+    
+            // Cache the response for future use
+            const cache = await caches.open(CACHE_NAME);
+            cache.put('/Exercise', new Response(JSON.stringify(response.data)));
+            setLoadingExercise(false);
+    
         } catch (error) {
             console.error("Error fetching exercise data:", error);
-            setLoadingExercise(false); 
+    
+            // If the network request fails, check the cache for data
+            if ('caches' in window) {
+                const cachedResponse = await caches.match('/Exercise');
+                if (cachedResponse) {
+                    const cachedData = await cachedResponse.json();
+                    setExerciseData(cachedData);
+                    console.log('Loaded exercise data from cache:', cachedData);
+                } else {
+                    console.error('No data available in cache either.');
+                }
+            }
+            setLoadingExercise(false);
         }
     };
+    
     const fetchUserTrainingData = async () => {
         try {
+            // First, try to fetch from the API
             const response = await axios.get('http://localhost:8080/Training', {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
                 }
             });
-            setUserTrainingData(response.data); 
-            console.log(response.data);
-            setLoadingUserTraining(false); 
+    
+            // If the request is successful, update state and cache the response
+            setUserTrainingData(response.data);
+            console.log('Fetched user training data:', response.data);
+    
+            // Cache the response for future use
+            const cache = await caches.open(CACHE_NAME);
+            cache.put('/Training', new Response(JSON.stringify(response.data)));
+            setLoadingUserTraining(false);
+    
         } catch (error) {
             console.error("Error fetching user training data:", error);
-            setLoadingUserTraining(false); 
+    
+            // If the network request fails, check the cache for data
+            if ('caches' in window) {
+                const cachedResponse = await caches.match('/Training');
+                if (cachedResponse) {
+                    const cachedData = await cachedResponse.json();
+                    setUserTrainingData(cachedData);
+                    console.log('Loaded training data from cache:', cachedData);
+                } else {
+                    console.error('No data available in cache either.');
+                }
+            }
+            setLoadingUserTraining(false);
         }
     };
+    
 
     return (
         <div>
@@ -93,52 +142,52 @@ const Content = () => {
                 <Link to='/'>
                     <button className="component-button">Back to main page</button>
                 </Link>
-                <button className="component-button"onClick={saveFile}>Save exercise</button>
+                <button className="component-button" onClick={saveFile}>Save exercise</button>
             </div>
         </div>
     );
 
     async function saveFile() {
         try {
-          const data = exerciseData.map(exercise => {
-            return `
-            Exercise Name: ${exercise.name}
-            Description: ${exercise.description}
-            Target Muscle Group: ${exercise.target}
-            Rating: ${exercise.rating}
-            Official Exercise: ${exercise.isOfficial ? "Yes" : "No"}
-            Visualisation URL: ${exercise.visualisationUrl}
-            ------------------------
-            `;
-          }).join('\n');
+            const data = exerciseData.map(exercise => {
+                return `
+                    Exercise Name: ${exercise.name}
+                    Description: ${exercise.description}
+                    Target Muscle Group: ${exercise.target}
+                    Rating: ${exercise.rating}
+                    Official Exercise: ${exercise.isOfficial ? "Yes" : "No"}
+                    Visualisation URL: ${exercise.visualisationUrl}
+                    ------------------------
+                `;
+            }).join('\n');
 
-          console.log(data)
-    
-          const fileHandle = await window.showSaveFilePicker({
-            suggestedName: 'FitYouFoodExercises.txt',
-            types: [
-              {
-                description: 'Text Files',
-                accept: { 'text/plain': ['.txt'] },
-              },
-            ],
-          });
-    
-          const writable = await fileHandle.createWritable();
-          await writable.write(data);
-          await writable.close();
-    
-          alert('File saved successfully!');
+            console.log(data);
+
+            const fileHandle = await window.showSaveFilePicker({
+                suggestedName: 'FitYouFoodExercises.txt',
+                types: [
+                    {
+                        description: 'Text Files',
+                        accept: { 'text/plain': ['.txt'] },
+                    },
+                ],
+            });
+
+            const writable = await fileHandle.createWritable();
+            await writable.write(data);
+            await writable.close();
+
+            alert('File saved successfully!');
         } catch (error) {
-          if (error.name === 'AbortError') {
-            console.log('User canceled the save file picker.');
-            alert('File save operation was canceled.');
-          } else {
-            console.error('Error saving the file:', error);
-            alert('An error occurred while saving the file.');
-          }
+            if (error.name === 'AbortError') {
+                console.log('User canceled the save file picker.');
+                alert('File save operation was canceled.');
+            } else {
+                console.error('Error saving the file:', error);
+                alert('An error occurred while saving the file.');
+            }
         }
-      }
+    }
 };
 
 export default Content;

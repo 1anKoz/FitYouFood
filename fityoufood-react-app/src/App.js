@@ -4,8 +4,8 @@ import logo from './logo.png';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 
 import Content from './components/Content';
-import Login from './components/Auth/Login';
-import Register from './components/Auth/Register';
+import Login from './components/Auth/login';
+import Register from './components/Auth/register';
 import Notification from './components/Notification';
 import { AuthContext } from './components/context/AuthContext';
 import UserConfig from './components/UserConfig';

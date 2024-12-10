@@ -2,16 +2,16 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { AuthProvider } from './components/context/AuthContext'; 
+import { AuthProvider } from './components/context/AuthContext';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <AuthProvider> 
+    <AuthProvider>
       <App />
     </AuthProvider>
-  </React.StrictMode>
+</React.StrictMode>
 );
 
-reportWebVitals();
+serviceWorkerRegistration.register();
