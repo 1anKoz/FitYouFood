@@ -31,9 +31,9 @@ function App() {
             <div className="App-nav-bar">
               <nav>
                 <Link to="/"><button className="menu-buttons">Main page</button></Link>
-                <Link to="/content"><button className="menu-buttons">Content</button></Link>
                 {user ? (
                   <>
+                    <Link to="/content"><button className="menu-buttons">Content</button></Link>
                     <Link to="/settings/user"><button className="menu-buttons">{user.username}</button></Link>
                     <button className="menu-buttons" onClick={logout}>Logout</button>
                   </>
