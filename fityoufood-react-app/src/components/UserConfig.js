@@ -4,6 +4,8 @@ import axios from 'axios';
 import './Components.css';
 import { AuthContext } from './context/AuthContext';
 
+const CACHE_NAME = 'fityoufood-user-cache-v2';
+
 const UserConfig = () => {
     const [loadingUserData, setLoadingUserData] = useState(true);
     const [userData, setUserData] = useState(null);
@@ -26,6 +28,7 @@ const UserConfig = () => {
         }
 
         try {
+            // First, try to fetch from the network (API)
             const response = await axios.get('http://localhost:8080/AccountControler', {
                 headers: {
                     'Authorization': `Bearer ${user.token}`,
@@ -35,8 +38,24 @@ const UserConfig = () => {
 
             console.log(response.data);
             setUserData(response.data);
+
+            // Cache the response for future use
+            const cache = await caches.open(CACHE_NAME);
+            cache.put('/AccountControler', new Response(JSON.stringify(response.data)));
         } catch (error) {
             console.error('Error while fetching user data:', error);
+
+            // If the network request fails, check the cache for data
+            if ('caches' in window) {
+                const cachedResponse = await caches.match('/AccountControler');
+                if (cachedResponse) {
+                    const cachedData = await cachedResponse.json();
+                    setUserData(cachedData);
+                    console.log('Loaded user data from cache:', cachedData);
+                } else {
+                    console.error('No data available in cache either.');
+                }
+            }
         } finally {
             setLoadingUserData(false);
         }
