@@ -8,18 +8,37 @@ const Notification = () => {
     const { user, login, logout } = useContext(AuthContext);
 
     useEffect(() => {
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notifications.");
+            return;
+        }
+
         if (Notification.permission === 'default') {
-            Notification.requestPermission().then((permission) => {
-                setPermission(permission);  
-            });
+            Notification.requestPermission()
+                .then((permission) => setPermission(permission))
+                .catch((error) => console.error("Notification permission error:", error));
         } else {
             setPermission(Notification.permission);  
         }
     }, []);  
 
     const showNotification = () => {
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notifications.");
+            return;
+        }
+
         if (permission === 'granted') {
-            new Notification('New Message!', { body: 'You have to complete your daily workout!' });
+            try {
+                new Notification('New Message!', {
+                    body: 'You have to complete your daily workout!',
+                    icon: 'favicon.ico', 
+                });
+            } catch (error) {
+                console.error("Error displaying notification:", error);
+            }
+        } else if (permission === 'denied') {
+            alert("You have denied notifications. Please enable them in browser settings.");
         } else {
             alert(`Notification permission not granted. Current permission: ${permission}`);
         }
