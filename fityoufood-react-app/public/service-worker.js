@@ -61,8 +61,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
     console.log('Service Worker: Fetching', event.request.url);
 
-    if (CACHE_API.some(apiUrl => event.request.url.includes(apiUrl))) {
-       
+    if (CACHE_API.some(apiUrl => event.request.url.startsWith(apiUrl))) {
         event.respondWith(
             caches.match(event.request).then((cachedResponse) => {
                 if (cachedResponse) {
@@ -70,10 +69,10 @@ self.addEventListener('fetch', (event) => {
                     return cachedResponse;
                 }
 
-                return fetch(requestWithToken).then((networkResponse) => {
+                return fetch(event.request).then((networkResponse) => {
                     if (networkResponse.ok) {
                         return caches.open(CACHE_NAME).then((cache) => {
-                            cache.put(requestWithToken, networkResponse.clone());
+                            cache.put(event.request, networkResponse.clone());
                             console.log('Service Worker: Cached new response for', event.request.url);
                             return networkResponse;
                         });
@@ -114,9 +113,14 @@ self.addEventListener('push', (event) => {
     const options = {
         body: event.data ? event.data.text() : 'New update available!',
         icon: '/favicon.ico',
+        tag: 'fit-you-food',
     };
 
-    event.waitUntil(self.registration.showNotification(title, options));
+    console.log("Push notification received:", event.data);
+
+    event.waitUntil(
+        self.registration.showNotification(title, options)
+    );
 });
 
 self.addEventListener('sync', (event) => {

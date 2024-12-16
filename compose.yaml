@@ -23,14 +23,15 @@ services:
 
   fityoufood-app-frontend:
     build:
-      context: .  
-      dockerfile: ./fityoufood-react-app/DockerfileReactApp 
+      context: .
+      dockerfile: ./fityoufood-react-app/DockerfileReactApp
     ports:
-      - "80:80"  
+      - "80:80" 
+      - "443:443"
     networks:
       - app_network
     depends_on:
-      - fityoufood-app-backend  
+      - fityoufood-app-backend
     image: 1ankoz/fityoufood-app-frontend:latest
     restart: on-failure
 
